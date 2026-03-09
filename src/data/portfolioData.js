@@ -127,7 +127,7 @@ export const contactLinks = [
   },
   {
     label: 'Email',
-    href: 'mailto:illmalicsi@addu.edu.ph',
+    href: 'https://mail.google.com/mail/?view=cm&fs=1&to=illmalicsi@addu.edu.ph&su=Portfolio%20Inquiry&body=Hi%20Ivan%2C%0A%0AI%20saw%20your%20portfolio%20and%20would%20love%20to%20connect%20about%20a%20project.%0A%0ABest%20regards%2C%0A',
     icon: FiMail,
   },
 ]
