@@ -5,6 +5,7 @@ function Hero() {
   return (
     <section id="home" className="relative overflow-hidden px-5 pb-16 pt-28 sm:px-6 md:px-8 md:pb-20 md:pt-44">
       <div className="hero-glow pointer-events-none absolute inset-0" aria-hidden="true" />
+      <div className="milky-way-band pointer-events-none absolute inset-0" aria-hidden="true" />
 
       <div className="relative mx-auto grid w-full max-w-6xl gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <Motion.div

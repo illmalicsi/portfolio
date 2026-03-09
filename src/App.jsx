@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react'
 import { motion as Motion } from 'framer-motion'
 import Navbar from './components/layout/Navbar'
+import ParticleNetwork from './components/layout/ParticleNetwork'
 import ScrollProgressTopButton from './components/layout/ScrollProgressTopButton'
 import About from './components/sections/About'
 import Contact from './components/sections/Contact'
@@ -62,26 +63,29 @@ function App() {
 
   return (
     <div className="relative overflow-x-hidden bg-slate-950 text-slate-100">
-      <div className="page-bg-pattern pointer-events-none fixed inset-0 -z-10" aria-hidden="true" />
+      <div className="page-bg-pattern pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
+      <ParticleNetwork theme={theme} />
 
-      <Navbar activeSection={activeSection} theme={theme} toggleTheme={toggleTheme} />
+      <div className="relative z-10">
+        <Navbar activeSection={activeSection} theme={theme} toggleTheme={toggleTheme} />
 
-      <Motion.main
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-      >
-        <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Experience />
-        <Contact />
-      </Motion.main>
+        <Motion.main
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+        >
+          <Hero />
+          <About />
+          <Skills />
+          <Projects />
+          <Experience />
+          <Contact />
+        </Motion.main>
 
-      <ScrollProgressTopButton />
+        <ScrollProgressTopButton />
 
-      <Footer />
+        <Footer />
+      </div>
     </div>
   )
 }

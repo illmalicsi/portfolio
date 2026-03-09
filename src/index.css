@@ -54,10 +54,34 @@ textarea,
     radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.12), transparent 30%);
 }
 
+.particle-network {
+  opacity: 0.96;
+  mix-blend-mode: screen;
+  filter: saturate(1.15) contrast(1.06);
+}
+
+
 .hero-glow {
   background:
     radial-gradient(circle at 85% 20%, rgba(59, 130, 246, 0.26), transparent 28%),
     radial-gradient(circle at 22% 12%, rgba(34, 211, 238, 0.22), transparent 33%);
+}
+
+.milky-way-band {
+  opacity: 0.62;
+  background:
+    linear-gradient(
+      112deg,
+      transparent 6%,
+      rgba(186, 230, 253, 0.04) 28%,
+      rgba(56, 189, 248, 0.12) 45%,
+      rgba(37, 99, 235, 0.11) 55%,
+      rgba(14, 165, 233, 0.07) 67%,
+      transparent 88%
+    );
+  filter: blur(18px) saturate(1.08);
+  transform: rotate(-9deg) scale(1.28) translateY(-3%);
+  transform-origin: center;
 }
 
 .glass-panel {
@@ -79,10 +103,39 @@ html.theme-light .page-bg-pattern {
     radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.1), transparent 32%);
 }
 
+html.theme-light .particle-network {
+  opacity: 0.72;
+  mix-blend-mode: normal;
+  filter: saturate(1.05) contrast(1.03);
+}
+
+
 html.theme-light .hero-glow {
   background:
     radial-gradient(circle at 85% 20%, rgba(59, 130, 246, 0.12), transparent 32%),
     radial-gradient(circle at 22% 12%, rgba(34, 211, 238, 0.1), transparent 35%);
+}
+
+html.theme-light .milky-way-band {
+  opacity: 0.5;
+  background:
+    linear-gradient(
+      112deg,
+      transparent 9%,
+      rgba(14, 116, 144, 0.03) 30%,
+      rgba(2, 132, 199, 0.08) 45%,
+      rgba(59, 130, 246, 0.08) 55%,
+      rgba(13, 148, 136, 0.05) 67%,
+      transparent 90%
+    );
+}
+
+@media (max-width: 640px) {
+  .milky-way-band {
+    opacity: 0.5;
+    filter: blur(14px);
+    transform: rotate(-8deg) scale(1.25) translateY(-1%);
+  }
 }
 
 html.theme-light .glass-panel {
