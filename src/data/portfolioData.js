@@ -117,17 +117,17 @@ export const experience = [
 export const contactLinks = [
   {
     label: 'GitHub',
-    href: 'https://github.com',
+    href: 'https://github.com/illmalicsi',
     icon: FiGithub,
   },
   {
     label: 'LinkedIn',
-    href: 'https://linkedin.com',
+    href: 'https://linkedin.com/in/illmalicsi',
     icon: FiLinkedin,
   },
   {
     label: 'Email',
-    href: 'mailto:hello@example.com',
+    href: 'mailto:illmalicsi@addu.edu.ph',
     icon: FiMail,
   },
 ]

@@ -25,7 +25,7 @@ function Contact() {
                 <span>Name</span>
                 <input
                   type="text"
-                  placeholder="Your name"
+                  placeholder="Please enter your name"
                   className="w-full rounded-xl border border-white/10 bg-slate-900/70 px-3.5 py-3 text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-cyan-300/60"
                 />
               </label>
@@ -33,7 +33,7 @@ function Contact() {
                 <span>Email</span>
                 <input
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="Please enter a valid email address"
                   className="w-full rounded-xl border border-white/10 bg-slate-900/70 px-3.5 py-3 text-slate-100 placeholder:text-slate-500 outline-none transition focus:border-cyan-300/60"
                 />
               </label>
