@@ -98,6 +98,13 @@ export const projects = [
 ]
 
 export const experience = [
+    {
+    role: 'Source Code Committee',
+    company: 'Computer Studies Student Executive Council (CSSEC) - Ateneo de Davao University',
+    period: '2024 - Present',
+    detail:
+      'Collaborating with a team to maintain and enhance the organization\'s website, ensuring it remains a reliable resource for students while applying best practices in web development and user experience design.',
+  },
   {
     role: 'BS Computer Science Student',
     company: 'Ateneo de Davao University',
