@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  font-family: 'Manrope', sans-serif;
+  color: #e2e8f0;
+  background: #020617;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: radial-gradient(circle at 15% 10%, #0b1b31 0%, #020617 30%, #020617 100%);
+}
+
+body,
+a,
+button,
+input,
+textarea,
+.glass-panel,
+.page-bg-pattern,
+.hero-glow {
+  transition:
+    background-color 240ms ease,
+    color 240ms ease,
+    border-color 240ms ease,
+    box-shadow 240ms ease,
+    background-image 320ms ease;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.page-bg-pattern {
+  background-image:
+    linear-gradient(120deg, rgba(56, 189, 248, 0.08), transparent 35%),
+    linear-gradient(300deg, rgba(37, 99, 235, 0.09), transparent 40%),
+    radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.14), transparent 35%),
+    radial-gradient(circle at 90% 80%, rgba(37, 99, 235, 0.12), transparent 30%);
+}
+
+.hero-glow {
+  background:
+    radial-gradient(circle at 85% 20%, rgba(59, 130, 246, 0.26), transparent 28%),
+    radial-gradient(circle at 22% 12%, rgba(34, 211, 238, 0.22), transparent 33%);
+}
+
+.glass-panel {
+  border: 1px solid rgba(148, 163, 184, 0.17);
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.52));
+  box-shadow: 0 18px 70px -44px rgba(14, 165, 233, 0.6);
+  backdrop-filter: blur(16px);
+}
+
+html.theme-light body {
+  background: radial-gradient(circle at 15% 10%, #ecf4ff 0%, #f8fafc 38%, #f8fafc 100%);
+}
+
+html.theme-light .page-bg-pattern {
+  background-image:
+    linear-gradient(120deg, rgba(56, 189, 248, 0.12), transparent 40%),
+    linear-gradient(300deg, rgba(14, 116, 144, 0.1), transparent 42%),
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.13), transparent 33%),
+    radial-gradient(circle at 90% 80%, rgba(14, 165, 233, 0.1), transparent 32%);
+}
+
+html.theme-light .hero-glow {
+  background:
+    radial-gradient(circle at 85% 20%, rgba(59, 130, 246, 0.12), transparent 32%),
+    radial-gradient(circle at 22% 12%, rgba(34, 211, 238, 0.1), transparent 35%);
+}
+
+html.theme-light .glass-panel {
+  border: 1px solid rgba(15, 23, 42, 0.09);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.92));
+  box-shadow: 0 22px 65px -45px rgba(14, 116, 144, 0.35);
+}
+
+html.theme-light .bg-slate-950 {
+  background-color: #f8fafc !important;
+}
+
+html.theme-light .bg-slate-900\/65,
+html.theme-light .bg-slate-900\/60,
+html.theme-light .bg-slate-900\/70,
+html.theme-light .bg-slate-800\/70 {
+  background-color: rgba(255, 255, 255, 0.82) !important;
+}
+
+html.theme-light .bg-white\/6,
+html.theme-light .bg-white\/8 {
+  background-color: rgba(15, 23, 42, 0.05) !important;
+}
+
+html.theme-light .text-white,
+html.theme-light .text-slate-100,
+html.theme-light .text-slate-200 {
+  color: #0f172a !important;
+}
+
+html.theme-light .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.theme-light .text-slate-400 {
+  color: #64748b !important;
+}
+
+html.theme-light .text-cyan-100,
+html.theme-light .text-cyan-200,
+html.theme-light .text-cyan-300,
+html.theme-light .text-cyan-100\/90,
+html.theme-light .text-cyan-200\/90,
+html.theme-light .text-cyan-300\/85 {
+  color: #0f766e !important;
+}
+
+html.theme-light .bg-cyan-300\/8,
+html.theme-light .bg-cyan-300\/10,
+html.theme-light .bg-cyan-300\/20 {
+  background-color: rgba(15, 118, 110, 0.14) !important;
+}
+
+html.theme-light .border-cyan-200\/70,
+html.theme-light .border-cyan-300\/35,
+html.theme-light .border-cyan-300\/40,
+html.theme-light .border-cyan-300\/45,
+html.theme-light .border-cyan-300\/50,
+html.theme-light .border-cyan-300\/60 {
+  border-color: rgba(15, 118, 110, 0.38) !important;
+}
+
+html.theme-light .border-white\/10,
+html.theme-light .border-white\/12,
+html.theme-light .border-white\/20 {
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html.theme-light .scroll-top-btn {
+  border-color: rgba(15, 23, 42, 0.15) !important;
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  color: #0f172a !important;
+  box-shadow: 0 14px 35px -20px rgba(14, 116, 144, 0.45) !important;
+}
+
+html.theme-light .scroll-top-btn:hover {
+  border-color: rgba(15, 118, 110, 0.45) !important;
+  color: #0f766e !important;
+}
+
+html.theme-light .scroll-top-ring-track {
+  color: rgba(15, 23, 42, 0.14) !important;
+}
+
+html.theme-light .scroll-top-ring-progress {
+  color: #0f766e !important;
+}
