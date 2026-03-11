@@ -12,7 +12,7 @@ function Navbar({ activeSection, theme, toggleTheme }) {
       <nav className="mx-auto w-full max-w-6xl rounded-2xl border border-white/10 bg-slate-900/65 px-4 py-3 backdrop-blur-xl shadow-[0_10px_50px_-20px_rgba(14,165,233,0.5)] md:px-5">
         <div className="flex items-center justify-between">
         <a href="#home" className="text-xs font-semibold tracking-[0.16em] text-slate-100 sm:text-sm sm:tracking-[0.2em]">
-          ILM.DEV
+          ILM
         </a>
 
         <ul className="hidden items-center gap-7 md:flex">

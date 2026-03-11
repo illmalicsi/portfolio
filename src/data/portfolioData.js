@@ -98,6 +98,13 @@ export const projects = [
 ]
 
 export const experience = [
+      {
+    role: 'Mathematics Organization Member',
+    company: 'Atendeo de Davao Mathematics Society (AdDAMS)',
+    period: '2025 - Present',
+    detail:
+      'Costantly improving my problem solving skills through ',
+  },
     {
     role: 'Source Code Committee',
     company: 'Computer Studies Student Executive Council (CSSEC) - Ateneo de Davao University',

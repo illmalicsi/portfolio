@@ -1,7 +1,6 @@
 ﻿import { motion as Motion } from 'framer-motion'
 import SectionHeading from '../layout/SectionHeading'
 import { aboutData } from '../../data/portfolioData'
-import profileImage from '../../assets/MALICSI, IVAN LOUIE.jpg'
 
 function About() {
   return (
@@ -13,7 +12,7 @@ function About() {
           description="I build software that not only works reliably but also feels intuitive and polished at every touchpoint."
         />
 
-        <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="grid gap-8">
           <Motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -30,28 +29,6 @@ function About() {
                 </li>
               ))}
             </ul>
-          </Motion.div>
-
-          <Motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="glass-panel rounded-3xl p-6 sm:p-8"
-          >
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Profile</p>
-            <div className="mt-5 flex justify-center">
-              <div className="relative h-52 w-52 rounded-full border border-white/10 bg-gradient-to-br from-slate-700 to-slate-900 p-2">
-                <img
-                  src={profileImage}
-                  alt="Ivan Louie L. Malicsi"
-                  className="h-full w-full rounded-full border border-cyan-300/35 object-cover object-center"
-                />
-              </div>
-            </div>
-            <p className="mt-6 text-center text-sm leading-relaxed text-slate-300">
-              Passionate about crafting products that combine robust engineering with refined visual design.
-            </p>
           </Motion.div>
         </div>
       </div>

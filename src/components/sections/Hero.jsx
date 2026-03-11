@@ -1,5 +1,6 @@
 ﻿import { motion as Motion } from 'framer-motion'
 import { heroData } from '../../data/portfolioData'
+import profileImage from '../../assets/MALICSI, IVAN LOUIE.jpg'
 
 function Hero() {
   return (
@@ -58,6 +59,13 @@ function Hero() {
         >
           <div className="absolute -right-14 -top-14 h-36 w-36 rounded-full bg-cyan-400/20 blur-3xl" />
           <div className="absolute -bottom-12 -left-12 h-36 w-36 rounded-full bg-blue-500/20 blur-3xl" />
+          <div className="mx-auto mb-6 h-44 w-44 overflow-hidden rounded-full border border-cyan-300/35 bg-slate-900/60 p-1.5 sm:h-52 sm:w-52">
+            <img
+              src={profileImage}
+              alt="Ivan Louie L. Malicsi"
+              className="h-full w-full rounded-full object-cover object-center"
+            />
+          </div>
           <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Current Focus</p>
           <h3 className="mt-3 text-[clamp(1.05rem,2.2vw,1.35rem)] font-bold leading-snug text-white whitespace-nowrap">
             Computer Science learning journey
