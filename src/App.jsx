@@ -1,5 +1,5 @@
-﻿import { useEffect, useState } from 'react'
-import { motion as Motion } from 'framer-motion'
+﻿import { useEffect, useRef, useState } from 'react'
+import { motion as Motion, useMotionValue, useSpring } from 'framer-motion'
 import Navbar from './components/layout/Navbar'
 import ParticleNetwork from './components/layout/ParticleNetwork'
 import ScrollProgressTopButton from './components/layout/ScrollProgressTopButton'
@@ -10,8 +10,9 @@ import Footer from './components/sections/Footer'
 import Hero from './components/sections/Hero'
 import Projects from './components/sections/Projects'
 import Skills from './components/sections/Skills'
+import Playground from './components/sections/Playground'
 
-const sectionIds = ['home', 'about', 'skills', 'projects', 'experience', 'contact']
+const sectionIds = ['home', 'about', 'skills', 'playground', 'projects', 'experience', 'contact']
 const themeKey = 'portfolio-theme'
 
 function getInitialTheme() {
@@ -24,6 +25,21 @@ function getInitialTheme() {
 function App() {
   const [activeSection, setActiveSection] = useState('home')
   const [theme, setTheme] = useState(getInitialTheme)
+
+  // Global cursor glow
+  const cursorX = useMotionValue(-500)
+  const cursorY = useMotionValue(-500)
+  const springX = useSpring(cursorX, { stiffness: 80, damping: 20 })
+  const springY = useSpring(cursorY, { stiffness: 80, damping: 20 })
+
+  useEffect(() => {
+    const move = (e) => {
+      cursorX.set(e.clientX)
+      cursorY.set(e.clientY)
+    }
+    window.addEventListener('mousemove', move)
+    return () => window.removeEventListener('mousemove', move)
+  }, [cursorX, cursorY])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -64,6 +80,19 @@ function App() {
   return (
     <div className="relative overflow-x-hidden bg-slate-950 text-slate-100">
       <div className="page-bg-pattern pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
+
+      {/* Global cursor glow */}
+      <Motion.div
+        className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          left: springX,
+          top: springY,
+          width: 500,
+          height: 500,
+          background: 'radial-gradient(circle, rgba(103,232,249,0.07) 0%, rgba(139,92,246,0.04) 40%, transparent 70%)',
+        }}
+      />
+
       <ParticleNetwork theme={theme} />
 
       <div className="relative z-10">
@@ -77,6 +106,7 @@ function App() {
           <Hero />
           <About />
           <Skills />
+          <Playground />
           <Projects />
           <Experience />
           <Contact />

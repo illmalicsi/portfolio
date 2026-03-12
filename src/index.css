@@ -1,5 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
+
+/* ── Prism syntax highlighting ─────────────────────────── */
+.token.comment, .token.prolog, .token.doctype, .token.cdata { color: #636e7b; }
+.token.punctuation    { color: #8892a4; }
+.token.property, .token.tag, .token.constant, .token.symbol { color: #79c0ff; }
+.token.boolean, .token.number  { color: #f08d49; }
+.token.selector, .token.attr-name, .token.string, .token.char, .token.builtin { color: #7ec699; }
+.token.operator, .token.entity, .token.url  { color: #67cdcc; }
+.token.atrule, .token.attr-value, .token.keyword { color: #cc99cd; }
+.token.function, .token.class-name { color: #f08d49; }
+.token.regex, .token.important, .token.variable { color: #fd971f; }
+.token.inserted { color: #7ec699; }
+.token.deleted  { color: #f97583; }
 
 :root {
   font-family: 'Manrope', sans-serif;
