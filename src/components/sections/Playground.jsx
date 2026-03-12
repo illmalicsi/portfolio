@@ -52,7 +52,18 @@ const INITIAL_CSS = `/* Live Theme — edit any value */
   --radius:  12px;
 }`
 
-const SHAPES = ['BoxGeometry', 'SphereGeometry', 'TorusGeometry', 'TorusKnotGeometry']
+const SHAPES = [
+  'BoxGeometry',
+  'SphereGeometry',
+  'TorusGeometry',
+  'TorusKnotGeometry',
+  'ConeGeometry',
+  'CylinderGeometry',
+  'TetrahedronGeometry',
+  'OctahedronGeometry',
+  'IcosahedronGeometry',
+  'DodecahedronGeometry',
+]
 
 // ── Three.js mesh ─────────────────────────────────────────────────────────────
 
@@ -69,6 +80,12 @@ function SceneMesh({ shape, color, wireframe, speed }) {
       {shape === 'SphereGeometry'    && <sphereGeometry    args={[1.2, 48, 48]} />}
       {shape === 'TorusGeometry'     && <torusGeometry     args={[1.0, 0.38, 24, 100]} />}
       {shape === 'TorusKnotGeometry' && <torusKnotGeometry args={[0.9, 0.28, 128, 16]} />}
+      {shape === 'ConeGeometry'      && <coneGeometry      args={[1.1, 2.2, 48]} />}
+      {shape === 'CylinderGeometry'  && <cylinderGeometry  args={[0.9, 0.9, 2.1, 48]} />}
+      {shape === 'TetrahedronGeometry' && <tetrahedronGeometry args={[1.35, 0]} />}
+      {shape === 'OctahedronGeometry' && <octahedronGeometry args={[1.25, 0]} />}
+      {shape === 'IcosahedronGeometry' && <icosahedronGeometry args={[1.15, 0]} />}
+      {shape === 'DodecahedronGeometry' && <dodecahedronGeometry args={[1.2, 0]} />}
       <meshStandardMaterial color={color} wireframe={wireframe} metalness={0.5} roughness={0.2} />
     </mesh>
   )
@@ -330,7 +347,7 @@ export default function Playground() {
                     <span className="text-xs text-slate-400 w-16 shrink-0">Wireframe</span>
                     <button
                       onClick={() => setWireframe((w) => !w)}
-                      className={`relative w-9 h-5 rounded-full transition-colors duration-200 ${
+                      className={`relative w-9 h-5 shrink-0 rounded-full transition-colors duration-200 ${
                         wireframe ? 'bg-cyan-500' : 'bg-slate-700'
                       }`}
                     >
@@ -340,7 +357,7 @@ export default function Playground() {
                         }`}
                       />
                     </button>
-                    <span className="text-xs text-slate-500 font-mono">
+                    <span className="inline-flex w-10 items-center text-xs text-slate-500 font-mono leading-none">
                       {wireframe ? 'true' : 'false'}
                     </span>
                   </div>
