@@ -29,11 +29,11 @@ function Projects() {
               <p className="mt-4 text-sm leading-relaxed text-slate-300">{project.description}</p>
 
               <div className="mt-5 flex flex-wrap gap-2">
-                {project.stack.map((tech) => (
+                  {project.stack.map((tech) => (
                   <span key={tech} className="rounded-full border border-white/10 bg-slate-800/70 px-3 py-1 text-xs text-slate-200">
                     {tech}
                   </span>
-                ))}
+                  ))}
               </div>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">

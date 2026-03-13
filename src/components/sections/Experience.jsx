@@ -31,7 +31,7 @@ function Experience() {
                   {item.period}
                 </span>
               </div>
-              <p className="mt-4 text-slate-300">{item.detail}</p>
+              {item.detail && <p className="mt-4 text-slate-300">{item.detail}</p>}
             </Motion.article>
           ))}
         </div>

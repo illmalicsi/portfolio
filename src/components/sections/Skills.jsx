@@ -3,7 +3,6 @@ import SectionHeading from '../layout/SectionHeading'
 import { skillGroups } from '../../data/portfolioData'
 
 function Skills() {
-
   const allSkills = skillGroups.flatMap((group) =>
     group.skills.map((skill) => ({ ...skill, group: group.title }))
   )

@@ -101,31 +101,28 @@ export const projects = [
 export const experience = [
       {
     role: 'Mathematics Organization Member',
-    company: 'Atendeo de Davao Mathematics Society (AdDAMS)',
+    company: 'Ateneo de Davao Mathematics Society (AdDAMS)',
     period: '2025 - Present',
-    detail:
-      'Costantly improving my problem solving skills through ',
   },
     {
     role: 'Source Code Committee',
     company: 'Computer Studies Student Executive Council (CSSEC) - Ateneo de Davao University',
     period: '2024 - Present',
-    detail:
-      'Collaborating with a team to maintain and enhance the organization\'s website, ensuring it remains a reliable resource for students while applying best practices in web development and user experience design.',
+  },
+    {
+    role: 'Ateneo Circle of Computer Enthusiasts and Success (ACCESS) Creative Team Member',
+    company: 'Ateneo de Davao University',
+    period: '2024 - Present',
   },
   {
     role: 'BS Computer Science Student',
     company: 'Ateneo de Davao University',
     period: '2023 - Present',
-    detail:
-      'Currently pursuing my degree while building practical web development skills through coursework, coding challenges, and hands-on projects.',
   },
   {
     role: 'Student Developer',
     company: 'Academic and Personal Projects',
     period: '2022 - Present',
-    detail:
-      'Developed responsive websites and small full stack applications to strengthen my skills in UI development, APIs, and problem solving.',
   },
 ]
 

@@ -147,8 +147,8 @@ export default function Playground() {
         {/* Tab switcher */}
         <div className="mt-12 flex gap-1 p-1 bg-white/5 rounded-xl w-fit border border-white/10">
           {[
-            { id: 'theme', label: '🎨  Theme Switcher' },
-            { id: '3d',    label: '🧊  3D Scene'        },
+            { id: 'theme', label: 'Theme Switcher' },
+            { id: '3d',    label: '3D Scene'        },
           ].map((t) => (
             <button
               key={t.id}
