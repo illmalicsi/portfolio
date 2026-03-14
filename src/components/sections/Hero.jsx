@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion as Motion } from 'framer-motion'
 import { FiArrowUpRight, FiGithub, FiLinkedin, FiMail } from 'react-icons/fi'
-import { contactLinks, experience, heroData, projects } from '../../data/portfolioData'
+import { contactLinks, experience, heroData } from '../../data/portfolioData'
 
 function Hero() {
   const sectionRef = useRef(null)
@@ -62,9 +62,9 @@ function Hero() {
 
     let animationFrame = 0
     let started = false
-    const targetYears = 3
-    const targetProjects = Math.max(projects.length, 1)
-    const targetOrganizations = Math.max(experience.length, 1)
+    const targetYears = 5
+    const targetProjects = 20
+    const targetOrganizations = 5
 
     const animateCounters = () => {
       if (started) return
@@ -203,7 +203,7 @@ function Hero() {
           </div>
           <div>
             <div className="hero-stat-num"><span>{projectCount}</span>+</div>
-            <div className="hero-stat-label">Projects Shipped</div>
+            <div className="hero-stat-label">Projects Made</div>
           </div>
           <div>
             <div className="hero-stat-num"><span>{orgCount}</span>+</div>
