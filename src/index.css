@@ -786,17 +786,74 @@ textarea,
 .project-card.wide { grid-column: span 12; }
 .project-card.third { grid-column: span 4; }
 
+.project-preview {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-3);
+  overflow: hidden;
+}
+
+.project-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.project-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 10, 12, 0.62) 0%, rgba(10, 10, 12, 0.08) 55%, transparent 100%);
+  pointer-events: none;
+}
+
+.project-preview-links {
+  position: absolute;
+  left: 0.9rem;
+  right: 0.9rem;
+  bottom: 0.8rem;
+  z-index: 1;
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.project-preview-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(10, 10, 12, 0.58);
+  padding: 0.35rem 0.6rem;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.project-preview-link:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(10, 10, 12, 0.78);
+}
+
 .project-inner {
   padding: 2.2rem;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 320px;
+  min-height: 250px;
 }
 
 .project-card.featured .project-inner {
-  min-height: 400px;
+  min-height: 300px;
 }
 
 .project-num {
@@ -829,10 +886,17 @@ textarea,
   flex: 1;
 }
 
+.project-stack-inline {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-top: 0.35rem;
+}
+
 .project-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-top: auto;
 }
 
@@ -872,18 +936,12 @@ textarea,
 }
 
 .project-visual {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.4s;
-  pointer-events: none;
-}
-
-.project-card:hover .project-visual {
-  opacity: 1;
+  display: none;
 }
 
 .project-bg-pattern {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   background-image: repeating-linear-gradient(
@@ -1346,6 +1404,10 @@ html.theme-light #contact {
     gap: 0.65rem;
   }
 
+  .project-preview {
+    height: 210px;
+  }
+
   .project-inner {
     min-height: unset;
     padding: 1.2rem;
@@ -1365,9 +1427,8 @@ html.theme-light #contact {
   }
 
   .project-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
+    justify-content: flex-start;
+    margin-top: 1rem;
   }
 
   .about-skills-grid {

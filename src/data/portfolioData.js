@@ -20,6 +20,7 @@ import {
   SiTailwindcss,
   SiTypescript,
 } from 'react-icons/si'
+import dbembPicture from '../assets/dbemb-picture.png'
 
 export const navLinks = [
   { label: 'Home', href: '#home' },
@@ -81,6 +82,15 @@ export const skillGroups = [
 ]
 
 export const projects = [
+  {
+    title: 'Davao Blue Eages Marching Band Website',
+    description:
+      'A dedicated website for the Davao Blue Eages Marching Band featuring a polished landing page, organization highlights, and responsive navigation for visitors across devices.',
+    stack: ['React Native', 'MySQL', 'Express', 'Node.js'],
+    demo: 'https://dbemb-website.vercel.app/#home',
+    github: 'https://github.com/illmalicsi/DBEMB-website',
+    image: dbembPicture,
+  },
   {
     title: 'Nexa Commerce',
     description:

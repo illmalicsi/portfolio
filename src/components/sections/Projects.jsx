@@ -25,21 +25,37 @@ function Projects() {
               whileHover={{ y: -8 }}
               className={`project-card ${cardKinds[index] ?? 'third'} reveal`}
             >
-              <div className="project-visual"><div className="project-bg-pattern" /></div>
+                <div className="project-preview">
+                  {project.image ? (
+                    <img src={project.image} alt={`${project.title} preview`} className="project-preview-image" />
+                  ) : (
+                    <div className="project-bg-pattern" />
+                  )}
+
+                  <div className="project-preview-links">
+                    <a href={project.demo} target="_blank" rel="noreferrer" className="project-preview-link">
+                      Live Preview <FiArrowUpRight size={12} />
+                    </a>
+                    <a href={project.github} target="_blank" rel="noreferrer" className="project-preview-link">
+                      GitHub <FiGithub size={12} />
+                    </a>
+                  </div>
+              </div>
+
               <div className="project-inner">
                 <div>
                   <div className="project-num">{String(index + 1).padStart(2, '0')}</div>
                   <h3 className="project-title">{project.title}</h3>
                   <p className="project-desc">{project.description}</p>
-                </div>
 
-                <div className="project-footer">
-                  <div className="project-tags">
+                  <div className="project-stack-inline">
                     {project.stack.map((tech) => (
                       <span key={tech} className="project-tag">{tech}</span>
                     ))}
                   </div>
+                </div>
 
+                <div className="project-footer">
                   <div className="flex items-center gap-2">
                     <a href={project.demo} target="_blank" rel="noreferrer" className="project-link" title="Live Demo">
                       <FiArrowUpRight size={14} />
