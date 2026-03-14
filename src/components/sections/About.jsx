@@ -1,34 +1,59 @@
 ﻿import { motion as Motion } from 'framer-motion'
-import SectionHeading from '../layout/SectionHeading'
-import { aboutData } from '../../data/portfolioData'
+import profileImage from '../../assets/MALICSI, IVAN LOUIE.jpg'
+import { aboutData, skillGroups } from '../../data/portfolioData'
 
 function About() {
-  return (
-    <section id="about" className="px-4 py-16 md:px-8 md:py-20">
-      <div className="mx-auto w-full max-w-6xl">
-        <SectionHeading
-          eyebrow="About"
-          title="Engineering with clarity, speed, and purpose"
-          description="I build software that not only works reliably but also feels intuitive and polished at every touchpoint."
-        />
+  const skillChips = skillGroups.flatMap((group) => group.skills.map((skill) => skill.name)).slice(0, 8)
 
-        <div className="grid gap-8">
+  return (
+    <section id="about" data-reveal className="reveal-section px-4 py-16 md:px-8 md:py-20">
+      <div className="mx-auto w-full max-w-6xl">
+        <div>
+          <div className="section-tag">01 - About</div>
+          <h2 className="section-title">The Developer Behind The Code</h2>
+          <p className="section-subtitle">Crafting software that scales, performs, and delights.</p>
+        </div>
+
+        <div className="about-grid">
           <Motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.5 }}
-            className="glass-panel rounded-3xl p-6 sm:p-8"
+            className="about-text"
           >
-            <p className="text-base leading-relaxed text-slate-300 md:text-lg">{aboutData.intro}</p>
-            <ul className="mt-7 space-y-4 text-slate-200">
-              {aboutData.specialties.map((item) => (
-                <li key={item} className="flex items-start gap-3">
-                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-cyan-300" />
-                  <span>{item}</span>
-                </li>
+            <p className="text-justify">{aboutData.intro}</p>
+            {aboutData.specialties.map((item) => (
+              <p key={item}><strong>{item}</strong></p>
+            ))}
+
+            <div className="about-skills-grid">
+              {skillChips.map((chip) => (
+                <div key={chip} className="skill-chip">{chip}</div>
               ))}
-            </ul>
+            </div>
+          </Motion.div>
+
+          <Motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="about-visual"
+          >
+            <div className="about-photo-frame">
+              <div className="about-photo-placeholder">
+                <img src={profileImage} alt="Ivan Louie L. Malicsi" className="h-full w-full object-cover" />
+              </div>
+              <div className="corner-accent tl" />
+              <div className="corner-accent tr" />
+              <div className="corner-accent bl" />
+              <div className="corner-accent br" />
+              <div className="about-float-tag">
+                <div className="num">5+</div>
+                <div className="lbl">Years Learning</div>
+              </div>
+            </div>
           </Motion.div>
         </div>
       </div>

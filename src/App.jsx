@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { motion as Motion, useMotionValue, useSpring } from 'framer-motion'
 import Navbar from './components/layout/Navbar'
 import ParticleNetwork from './components/layout/ParticleNetwork'
@@ -25,12 +25,29 @@ function getInitialTheme() {
 function App() {
   const [activeSection, setActiveSection] = useState('home')
   const [theme, setTheme] = useState(getInitialTheme)
+  const [cursorEnabled, setCursorEnabled] = useState(false)
 
   // Global cursor glow
   const cursorX = useMotionValue(-500)
   const cursorY = useMotionValue(-500)
   const springX = useSpring(cursorX, { stiffness: 80, damping: 20 })
   const springY = useSpring(cursorY, { stiffness: 80, damping: 20 })
+  const ringX = useSpring(cursorX, { stiffness: 220, damping: 30 })
+  const ringY = useSpring(cursorY, { stiffness: 220, damping: 30 })
+  const dotX = useSpring(cursorX, { stiffness: 600, damping: 42 })
+  const dotY = useSpring(cursorY, { stiffness: 600, damping: 42 })
+
+  useEffect(() => {
+    const canUseHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const shouldEnableCursor = canUseHover && !prefersReducedMotion
+    setCursorEnabled(shouldEnableCursor)
+    document.body.classList.toggle('custom-cursor-enabled', shouldEnableCursor)
+
+    return () => {
+      document.body.classList.remove('custom-cursor-enabled')
+    }
+  }, [])
 
   useEffect(() => {
     const move = (e) => {
@@ -67,6 +84,33 @@ function App() {
   }, [])
 
   useEffect(() => {
+    const revealed = new Set()
+    const revealTargets = document.querySelectorAll('[data-reveal]')
+
+    if (!revealTargets.length) return undefined
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !revealed.has(entry.target)) {
+            entry.target.classList.add('reveal-visible')
+            revealed.add(entry.target)
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      {
+        threshold: 0.18,
+        rootMargin: '0px 0px -12% 0px',
+      },
+    )
+
+    revealTargets.forEach((node) => observer.observe(node))
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
     const isLightTheme = theme === 'light'
     document.documentElement.classList.toggle('theme-light', isLightTheme)
     document.documentElement.style.colorScheme = isLightTheme ? 'light' : 'dark'
@@ -78,7 +122,7 @@ function App() {
   }
 
   return (
-    <div className="relative overflow-x-hidden bg-slate-950 text-slate-100">
+    <div className="relative overflow-x-hidden bg-[var(--bg)] text-[var(--text)]">
       <div className="page-bg-pattern pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
 
       {/* Global cursor glow */}
@@ -89,9 +133,24 @@ function App() {
           top: springY,
           width: 500,
           height: 500,
-          background: 'radial-gradient(circle, rgba(103,232,249,0.07) 0%, rgba(139,92,246,0.04) 40%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(201,168,76,0.11) 0%, rgba(62,207,178,0.06) 42%, transparent 72%)',
         }}
       />
+
+      {cursorEnabled && (
+        <>
+          <Motion.div
+            aria-hidden="true"
+            className="custom-cursor-ring pointer-events-none fixed z-[110] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{ left: ringX, top: ringY }}
+          />
+          <Motion.div
+            aria-hidden="true"
+            className="custom-cursor-dot pointer-events-none fixed z-[111] -translate-x-1/2 -translate-y-1/2 rounded-full"
+            style={{ left: dotX, top: dotY }}
+          />
+        </>
+      )}
 
       <ParticleNetwork theme={theme} />
 

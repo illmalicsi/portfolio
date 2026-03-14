@@ -9,9 +9,9 @@ function SectionHeading({ eyebrow, title, description }) {
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className="mb-12 max-w-2xl"
     >
-      <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300/85">{eyebrow}</p>
-      <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">{title}</h2>
-      <p className="mt-4 text-base text-slate-300 md:text-lg">{description}</p>
+      <p className="section-eyebrow">{eyebrow}</p>
+      <h2 className="section-title mt-3">{title}</h2>
+      <p className="section-description mt-4">{description}</p>
     </Motion.div>
   )
 }

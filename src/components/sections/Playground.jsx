@@ -130,7 +130,7 @@ export default function Playground() {
   const [speed,     setSpeed]     = useState(1.0)
 
   return (
-    <section id="playground" className="px-4 py-24 md:px-8 md:py-32 relative overflow-hidden">
+    <section id="playground" data-reveal className="reveal-section px-4 py-24 md:px-8 md:py-32 relative overflow-hidden">
       {/* bg blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-32 -left-32 w-80 h-80 bg-violet-600/8 rounded-full blur-3xl" />

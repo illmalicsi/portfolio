@@ -9,7 +9,17 @@ import {
   FiServer,
   FiSettings,
 } from 'react-icons/fi'
-import { SiExpress, SiMongodb, SiNextdotjs, SiNodedotjs, SiPostgresql, SiReact, SiTailwindcss, SiTypescript } from 'react-icons/si'
+import {
+  SiExpress,
+  SiMongodb,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiPostgresql,
+  SiPython,
+  SiReact,
+  SiTailwindcss,
+  SiTypescript,
+} from 'react-icons/si'
 
 export const navLinks = [
   { label: 'Home', href: '#home' },
@@ -24,18 +34,15 @@ export const navLinks = [
 export const heroData = {
   name: 'Ivan Louie L. Malicsi',
   title: '3rd Year BS Computer Science Student',
+  typedPhrases: ['digital experiences.', 'responsive interfaces.', 'scalable web apps.'],
   tagline:
     'I build modern web applications and continuously sharpen my skills in full stack development, clean architecture, and user-focused design.',
 }
 
 export const aboutData = {
   intro:
-    'I am currently a 3rd year Bachelor of Science in Computer Science student, passionate about building real-world web applications. I enjoy turning ideas into polished interfaces and reliable backend features while learning industry best practices.',
-  specialties: [
-    'Frontend development with React and Tailwind CSS',
-    'Backend fundamentals with Node.js and Express',
-    'Continuous learning through academic and personal projects',
-  ],
+    'I am currently a 3rd year Bachelor of Science in Computer Science student, passionate about building real-world web applications that are both useful and enjoyable to use. I enjoy turning ideas into polished interfaces and reliable backend features, while continuously improving how I plan, design, and implement software from start to finish. Through academic work, organization involvement, and personal projects, I have developed a strong foundation in problem-solving, clean coding practices, teamwork, and adaptability. My goal is to keep growing as a developer by creating products that are practical, maintainable, and genuinely impactful for the people who use them.',
+  specialties: [],
 }
 
 export const skillGroups = [
@@ -55,6 +62,8 @@ export const skillGroups = [
     skills: [
       { name: 'Node.js', icon: SiNodedotjs },
       { name: 'Express', icon: SiExpress },
+      { name: 'Java', icon: FiCode },
+      { name: 'Python', icon: SiPython },
       { name: 'PostgreSQL', icon: SiPostgresql },
       { name: 'MongoDB', icon: SiMongodb },
     ],
@@ -122,7 +131,7 @@ export const experience = [
   {
     role: 'Student Developer',
     company: 'Academic and Personal Projects',
-    period: '2022 - Present',
+    period: '2021 - Present',
   },
 ]
 
