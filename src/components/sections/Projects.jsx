@@ -1,6 +1,7 @@
 ﻿import { motion as Motion } from 'framer-motion'
-import { FiArrowUpRight, FiGithub } from 'react-icons/fi'
+import { FiArrowUpRight } from 'react-icons/fi'
 import { projects } from '../../data/portfolioData'
+import ElectricBorder from '../layout/ElectricBorder'
 
 function Projects() {
   const cardKinds = ['featured', 'side', 'wide']
@@ -25,6 +26,7 @@ function Projects() {
               whileHover={{ y: -8 }}
               className={`project-card ${cardKinds[index] ?? 'third'} reveal`}
             >
+              <ElectricBorder color="#7df9ff" speed={1} chaos={0.12} borderRadius={12} className="flex flex-col flex-1">
                 <div className="project-preview">
                   {project.image ? (
                     <img src={project.image} alt={`${project.title} preview`} className="project-preview-image" />
@@ -35,9 +37,6 @@ function Projects() {
                   <div className="project-preview-links">
                     <a href={project.demo} target="_blank" rel="noreferrer" className="project-preview-link">
                       Live Preview <FiArrowUpRight size={12} />
-                    </a>
-                    <a href={project.github} target="_blank" rel="noreferrer" className="project-preview-link">
-                      GitHub <FiGithub size={12} />
                     </a>
                   </div>
               </div>
@@ -60,12 +59,10 @@ function Projects() {
                     <a href={project.demo} target="_blank" rel="noreferrer" className="project-link" title="Live Demo">
                       <FiArrowUpRight size={14} />
                     </a>
-                    <a href={project.github} target="_blank" rel="noreferrer" className="project-link" title="GitHub Repository">
-                      <FiGithub size={14} />
-                    </a>
                   </div>
                 </div>
               </div>
+              </ElectricBorder>
             </Motion.article>
           ))}
         </div>

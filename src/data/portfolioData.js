@@ -21,6 +21,7 @@ import {
   SiTypescript,
 } from 'react-icons/si'
 import dbembPicture from '../assets/dbemb-picture.png'
+import synapsyApp from '../assets/synapsy-app.png'
 
 export const navLinks = [
   { label: 'Home', href: '#home' },
@@ -88,16 +89,15 @@ export const projects = [
       'A dedicated website for the Davao Blue Eages Marching Band featuring a polished landing page, organization highlights, and responsive navigation for visitors across devices.',
     stack: ['React Native', 'MySQL', 'Express', 'Node.js'],
     demo: 'https://dbemb-website.vercel.app/#home',
-    github: 'https://github.com/illmalicsi/DBEMB-website',
     image: dbembPicture,
   },
   {
-    title: 'Nexa Commerce',
+    title: 'Synapsy: Your Study Buddy App',
     description:
-      'A modern e-commerce platform with real-time inventory sync, personalized product feeds, and high-conversion checkout flows.',
-    stack: ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
-    demo: 'https://example.com',
-    github: 'https://github.com',
+      'An AI-powered study companion that generates quizzes from your uploaded PDFs or any topic you choose. Powered by Gemini, Synapsy turns your materials into interactive practice sessions to help you study smarter.',
+    stack: ['React', 'Gemini AI', 'Tailwind CSS', 'Vite'],
+    demo: 'https://synapsy-app.vercel.app/',
+    image: synapsyApp,
   },
   {
     title: 'Pulse Analytics',
@@ -105,7 +105,6 @@ export const projects = [
       'A SaaS dashboard that visualizes multi-source data with interactive charts, granular permissions, and collaborative workspaces.',
     stack: ['Next.js', 'Tailwind', 'Express', 'MongoDB'],
     demo: 'https://example.com',
-    github: 'https://github.com',
   },
   {
     title: 'Flow Board',
@@ -113,7 +112,6 @@ export const projects = [
       'A productivity app for managing engineering workflows with custom automations, timeline views, and intelligent notifications.',
     stack: ['React', 'Framer Motion', 'Node.js', 'PostgreSQL'],
     demo: 'https://example.com',
-    github: 'https://github.com',
   },
 ]
 

@@ -2,6 +2,7 @@
 import { motion as Motion, useMotionValue, useSpring } from 'framer-motion'
 import Navbar from './components/layout/Navbar'
 import ParticleNetwork from './components/layout/ParticleNetwork'
+import SplashCursor from './components/layout/SplashCursor'
 import ScrollProgressTopButton from './components/layout/ScrollProgressTopButton'
 import About from './components/sections/About'
 import Contact from './components/sections/Contact'
@@ -152,6 +153,7 @@ function App() {
         </>
       )}
 
+      <SplashCursor />
       <ParticleNetwork theme={theme} />
 
       <div className="relative z-10">
