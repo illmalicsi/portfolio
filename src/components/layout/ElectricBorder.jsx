@@ -2,7 +2,7 @@
 // Component inspired by @BalintFerenczy on X
 // https://codepen.io/BalintFerenczy/pen/KwdoyEN
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 
 function hexToRgba(hex, alpha = 1) {
   if (!hex) return `rgba(0,0,0,${alpha})`;
@@ -22,7 +22,7 @@ function hexToRgba(hex, alpha = 1) {
 
 const ElectricBorder = ({
   children,
-  color = '#5227FF',
+  color = '#2c91cc',
   speed = 1,
   chaos = 0.12,
   borderRadius = 24,
@@ -34,6 +34,7 @@ const ElectricBorder = ({
   const animationRef = useRef(null);
   const timeRef = useRef(0);
   const lastFrameTimeRef = useRef(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   const random = useCallback(x => {
     return (Math.sin(x * 12.9898) * 43758.5453) % 1;
@@ -154,6 +155,12 @@ const ElectricBorder = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    if (!isHovered) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
+
     const octaves = 10;
     const lacunarity = 1.6;
     const gain = 0.7;
@@ -269,18 +276,26 @@ const ElectricBorder = ({
       }
       resizeObserver.disconnect();
     };
-  }, [color, speed, chaos, borderRadius, octavedNoise, getRoundedRectPoint]);
+  }, [color, speed, chaos, borderRadius, octavedNoise, getRoundedRectPoint, isHovered]);
 
   return (
     <div
       ref={containerRef}
       className={`relative overflow-visible isolate ${className ?? ''}`}
       style={{ '--electric-border-color': color, borderRadius, ...style }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[2]">
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[2]"
+        style={{ opacity: isHovered ? 1 : 0, transition: 'opacity 220ms ease' }}
+      >
         <canvas ref={canvasRef} className="block" />
       </div>
-      <div className="absolute inset-0 rounded-[inherit] pointer-events-none z-0">
+      <div
+        className="absolute inset-0 rounded-[inherit] pointer-events-none z-0"
+        style={{ opacity: isHovered ? 1 : 0, transition: 'opacity 220ms ease' }}
+      >
         <div
           className="absolute inset-0 rounded-[inherit] pointer-events-none"
           style={{ border: `2px solid ${hexToRgba(color, 0.6)}`, filter: 'blur(1px)' }}

@@ -8,8 +8,6 @@ const defaultPercents = {
 }
 
 function Skills() {
-  const allTools = Array.from(new Set(skillGroups.flatMap((group) => group.skills.map((skill) => skill.name))))
-
   return (
     <section id="skills" data-reveal className="reveal-section px-4 py-16 md:px-8 md:py-20">
       <div className="mx-auto w-full max-w-6xl">
@@ -41,7 +39,13 @@ function Skills() {
                         <span className="skill-pct">{value}%</span>
                       </div>
                       <div className="skill-track">
-                        <div className="skill-fill" style={{ transform: `scaleX(${value / 100})` }} />
+                        <Motion.div
+                          className="skill-fill"
+                          initial={{ scaleX: 0 }}
+                          whileInView={{ scaleX: value / 100 }}
+                          viewport={{ once: true, amount: 0.7 }}
+                          transition={{ duration: 0.8, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                        />
                       </div>
                     </div>
                   )
@@ -50,19 +54,6 @@ function Skills() {
             ))}
           </div>
 
-          <Motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.45, delay: 0.1 }}
-          >
-            <div className="skill-cat-label" style={{ marginBottom: '1.2rem' }}>All Tools and Technologies</div>
-            <div className="tools-cloud">
-              {allTools.map((tool) => (
-                <span key={tool} className="tool-badge">{tool}</span>
-              ))}
-            </div>
-          </Motion.div>
         </div>
       </div>
     </section>

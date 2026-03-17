@@ -26,7 +26,7 @@ function Projects() {
               whileHover={{ y: -8 }}
               className={`project-card ${cardKinds[index] ?? 'third'} reveal`}
             >
-              <ElectricBorder color="#7df9ff" speed={1} chaos={0.12} borderRadius={12} className="flex flex-col flex-1">
+              <ElectricBorder color="#2c91cc" speed={1} chaos={0.12} borderRadius={12} className="flex flex-col flex-1">
                 <div className="project-preview">
                   {project.image ? (
                     <img src={project.image} alt={`${project.title} preview`} className="project-preview-image" />

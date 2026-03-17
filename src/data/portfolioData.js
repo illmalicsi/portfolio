@@ -9,6 +9,7 @@ import {
   FiServer,
   FiSettings,
 } from 'react-icons/fi'
+import { FaJava } from 'react-icons/fa'
 import {
   SiExpress,
   SiMongodb,
@@ -64,7 +65,7 @@ export const skillGroups = [
     skills: [
       { name: 'Node.js', icon: SiNodedotjs },
       { name: 'Express', icon: SiExpress },
-      { name: 'Java', icon: FiCode },
+      { name: 'Java', icon: FaJava },
       { name: 'Python', icon: SiPython },
       { name: 'PostgreSQL', icon: SiPostgresql },
       { name: 'MongoDB', icon: SiMongodb },

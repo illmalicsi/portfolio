@@ -3,7 +3,7 @@ import profileImage from '../../assets/MALICSI, IVAN LOUIE.jpg'
 import { aboutData, skillGroups } from '../../data/portfolioData'
 
 function About() {
-  const skillChips = skillGroups.flatMap((group) => group.skills.map((skill) => skill.name)).slice(0, 8)
+  const skillChips = skillGroups.flatMap((group) => group.skills).slice(0, 8)
 
   return (
     <section id="about" data-reveal className="reveal-section px-4 py-16 md:px-8 md:py-20">
@@ -29,7 +29,10 @@ function About() {
 
             <div className="about-skills-grid">
               {skillChips.map((chip) => (
-                <div key={chip} className="skill-chip">{chip}</div>
+                <div key={chip.name} className="skill-chip">
+                  <chip.icon className="skill-chip-icon" aria-hidden="true" />
+                  <span>{chip.name}</span>
+                </div>
               ))}
             </div>
           </Motion.div>
