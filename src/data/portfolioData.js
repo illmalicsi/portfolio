@@ -23,6 +23,7 @@ import {
 } from 'react-icons/si'
 import dbembPicture from '../assets/dbemb-picture.png'
 import synapsyApp from '../assets/synapsy-app.png'
+import caloTrack from '../assets/CaloTrack.png'
 
 export const navLinks = [
   { label: 'Home', href: '#home' },
@@ -101,11 +102,12 @@ export const projects = [
     image: synapsyApp,
   },
   {
-    title: 'Pulse Analytics',
+    title: 'CaloTrack',
     description:
-      'A SaaS dashboard that visualizes multi-source data with interactive charts, granular permissions, and collaborative workspaces.',
-    stack: ['Next.js', 'Tailwind', 'Express', 'MongoDB'],
-    demo: 'https://example.com',
+      'An AI-assisted calorie tracking app that helps users log meals, estimate nutrition details, and monitor daily intake with a fast, user-friendly interface powered by Gemini AI.',
+    stack: ['React', 'Gemini AI', 'Tailwind CSS', 'Vite'],
+    demo: 'https://calotrack-me.vercel.app/',
+    image: caloTrack,
   },
   {
     title: 'Flow Board',

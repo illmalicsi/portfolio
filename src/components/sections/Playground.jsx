@@ -151,7 +151,6 @@ export default function Playground() {
   // Snake tab
   const [snake, setSnake] = useState(SNAKE_START)
   const [food, setFood] = useState({ x: 12, y: 8 })
-  const [snakeDirection, setSnakeDirection] = useState('right')
   const [snakeStatus, setSnakeStatus] = useState('idle')
   const [snakeScore, setSnakeScore] = useState(0)
   const [snakeSpeed, setSnakeSpeed] = useState(140)
@@ -162,6 +161,7 @@ export default function Playground() {
   })
 
   const directionRef = useRef('right')
+  const pendingDirectionRef = useRef('right')
   const foodRef = useRef(food)
   const scoreRef = useRef(0)
 
@@ -190,19 +190,24 @@ export default function Playground() {
     const startingFood = randomFood(SNAKE_START)
     setSnake(SNAKE_START)
     setFood(startingFood)
-    setSnakeDirection('right')
     setSnakeStatus('idle')
     setSnakeScore(0)
     directionRef.current = 'right'
+    pendingDirectionRef.current = 'right'
     foodRef.current = startingFood
     scoreRef.current = 0
   }, [randomFood])
 
   const setNextDirection = useCallback((nextDirection) => {
     const current = directionRef.current
-    if (nextDirection === current || OPPOSITE_SNAKE_DIRECTION[current] === nextDirection) return
-    directionRef.current = nextDirection
-    setSnakeDirection(nextDirection)
+    const pending = pendingDirectionRef.current
+    if (
+      nextDirection === pending ||
+      OPPOSITE_SNAKE_DIRECTION[current] === nextDirection
+    ) {
+      return
+    }
+    pendingDirectionRef.current = nextDirection
   }, [])
 
   const startSnake = useCallback(() => {
@@ -233,11 +238,17 @@ export default function Playground() {
 
     const timer = window.setInterval(() => {
       setSnake((prevSnake) => {
-        const step = SNAKE_DIRECTIONS[directionRef.current]
+        const moveDirection = pendingDirectionRef.current
+        directionRef.current = moveDirection
+        const step = SNAKE_DIRECTIONS[moveDirection]
         const nextHead = {
           x: prevSnake[0].x + step.x,
           y: prevSnake[0].y + step.y,
         }
+
+        const currentFood = foodRef.current
+        const eatsFood = nextHead.x === currentFood.x && nextHead.y === currentFood.y
+        const tailWillMove = !eatsFood
 
         const hitsWall =
           nextHead.x < 0 ||
@@ -245,7 +256,8 @@ export default function Playground() {
           nextHead.x >= SNAKE_GRID_SIZE ||
           nextHead.y >= SNAKE_GRID_SIZE
 
-        const hitsSelf = prevSnake.some((segment) => segment.x === nextHead.x && segment.y === nextHead.y)
+        const bodyToCheck = tailWillMove ? prevSnake.slice(0, -1) : prevSnake
+        const hitsSelf = bodyToCheck.some((segment) => segment.x === nextHead.x && segment.y === nextHead.y)
 
         if (hitsWall || hitsSelf) {
           setSnakeStatus('over')
@@ -253,8 +265,8 @@ export default function Playground() {
           return prevSnake
         }
 
-        const eatsFood = nextHead.x === foodRef.current.x && nextHead.y === foodRef.current.y
-        const nextSnake = [nextHead, ...prevSnake]
+        const targetLength = prevSnake.length + (eatsFood ? 1 : 0)
+        const nextSnake = [nextHead, ...prevSnake].slice(0, targetLength)
 
         if (eatsFood) {
           const nextScore = scoreRef.current + 10
@@ -264,8 +276,6 @@ export default function Playground() {
           const nextFood = randomFood(nextSnake)
           setFood(nextFood)
           foodRef.current = nextFood
-        } else {
-          nextSnake.pop()
         }
 
         return nextSnake
