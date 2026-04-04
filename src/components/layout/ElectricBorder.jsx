@@ -199,11 +199,6 @@ const ElectricBorder = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.scale(dpr, dpr);
 
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 1;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-
       const scale = displacement;
       const left = borderOffset;
       const top = borderOffset;
@@ -256,6 +251,20 @@ const ElectricBorder = ({
       }
 
       ctx.closePath();
+
+      // Outer soft glow stroke
+      ctx.strokeStyle = hexToRgba(color, 0.35);
+      ctx.lineWidth = 2.4;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.shadowColor = hexToRgba(color, 0.7);
+      ctx.shadowBlur = 14;
+      ctx.stroke();
+
+      // Inner sharp electric stroke
+      ctx.strokeStyle = hexToRgba(color, 0.95);
+      ctx.lineWidth = 1;
+      ctx.shadowBlur = 0;
       ctx.stroke();
 
       animationRef.current = requestAnimationFrame(drawElectricBorder);
@@ -281,34 +290,36 @@ const ElectricBorder = ({
   return (
     <div
       ref={containerRef}
-      className={`relative overflow-visible isolate ${className ?? ''}`}
+      className={`relative overflow-visible isolate electric-border-wrap ${className ?? ''}`}
       style={{ '--electric-border-color': color, borderRadius, ...style }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      <div className="absolute inset-0 rounded-[inherit] pointer-events-none z-0 electric-border-base" />
+
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-[2]"
-        style={{ opacity: isHovered ? 1 : 0, transition: 'opacity 220ms ease' }}
+        style={{ opacity: isHovered ? 1 : 0, transition: 'opacity 280ms cubic-bezier(0.22, 1, 0.36, 1)' }}
       >
         <canvas ref={canvasRef} className="block" />
       </div>
+
       <div
         className="absolute inset-0 rounded-[inherit] pointer-events-none z-0"
-        style={{ opacity: isHovered ? 1 : 0, transition: 'opacity 220ms ease' }}
+        style={{ opacity: isHovered ? 1 : 0, transition: 'opacity 280ms cubic-bezier(0.22, 1, 0.36, 1)' }}
       >
         <div
-          className="absolute inset-0 rounded-[inherit] pointer-events-none"
-          style={{ border: `2px solid ${hexToRgba(color, 0.6)}`, filter: 'blur(1px)' }}
+          className="absolute inset-0 rounded-[inherit] pointer-events-none electric-border-core"
+          style={{ border: `1px solid ${hexToRgba(color, 0.82)}` }}
         />
         <div
-          className="absolute inset-0 rounded-[inherit] pointer-events-none"
-          style={{ border: `2px solid ${color}`, filter: 'blur(4px)' }}
+          className="absolute inset-0 rounded-[inherit] pointer-events-none electric-border-glow"
+          style={{ border: `2px solid ${hexToRgba(color, 0.65)}` }}
         />
         <div
-          className="absolute inset-0 rounded-[inherit] pointer-events-none -z-[1] scale-110 opacity-30"
+          className="absolute inset-0 rounded-[inherit] pointer-events-none -z-[1] scale-[1.06] opacity-55 electric-border-sweep"
           style={{
-            filter: 'blur(32px)',
-            background: `linear-gradient(-30deg, ${color}, transparent, ${color})`
+            background: `conic-gradient(from 0deg, transparent 8%, ${hexToRgba(color, 0.7)} 20%, transparent 35%, ${hexToRgba(color, 0.35)} 56%, transparent 72%, ${hexToRgba(color, 0.78)} 88%, transparent 100%)`
           }}
         />
       </div>

@@ -24,6 +24,7 @@ import {
 import dbembPicture from '../assets/dbemb-picture.png'
 import synapsyApp from '../assets/synapsy-app.png'
 import caloTrack from '../assets/CaloTrack.png'
+import aslImage from '../assets/asl.png'
 
 export const navLinks = [
   { label: 'Home', href: '#home' },
@@ -38,7 +39,7 @@ export const navLinks = [
 export const heroData = {
   name: 'Ivan Louie L. Malicsi',
   title: '3rd Year BS Computer Science Student',
-  typedPhrases: ['digital experiences.', 'responsive interfaces.', 'scalable web apps.'],
+  typedPhrases: ['pixel-precise interfaces.', 'fast, clean web apps.', 'modern digital experiences.'],
   tagline:
     'I build modern web applications and continuously sharpen my skills in full stack development, clean architecture, and user-focused design.',
 }
@@ -110,11 +111,12 @@ export const projects = [
     image: caloTrack,
   },
   {
-    title: 'Flow Board',
+    title: 'ASL Recognition',
     description:
-      'A productivity app for managing engineering workflows with custom automations, timeline views, and intelligent notifications.',
+      'A web application that recognizes American Sign Language gestures and provides fast, accessible predictions in the browser.',
     stack: ['React', 'Framer Motion', 'Node.js', 'PostgreSQL'],
-    demo: 'https://example.com',
+    demo: 'https://aslrecognition.vercel.app/',
+    image: aslImage,
   },
 ]
 

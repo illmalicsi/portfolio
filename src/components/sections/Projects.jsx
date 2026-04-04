@@ -22,7 +22,7 @@ function Projects() {
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: index * 0.08 }}
               whileHover={{ y: -8 }}
               className={`project-card ${cardKinds[index] ?? 'third'} reveal`}
             >
@@ -39,29 +39,29 @@ function Projects() {
                       Live Preview <FiArrowUpRight size={12} />
                     </a>
                   </div>
-              </div>
-
-              <div className="project-inner">
-                <div>
-                  <div className="project-num">{String(index + 1).padStart(2, '0')}</div>
-                  <h3 className="project-title">{project.title}</h3>
-                  <p className="project-desc">{project.description}</p>
-
-                  <div className="project-stack-inline">
-                    {project.stack.map((tech) => (
-                      <span key={tech} className="project-tag">{tech}</span>
-                    ))}
-                  </div>
                 </div>
 
-                <div className="project-footer">
-                  <div className="flex items-center gap-2">
-                    <a href={project.demo} target="_blank" rel="noreferrer" className="project-link" title="Live Demo">
-                      <FiArrowUpRight size={14} />
-                    </a>
+                <div className="project-inner">
+                  <div>
+                    <div className="project-num">{String(index + 1).padStart(2, '0')}</div>
+                    <h3 className="project-title">{project.title}</h3>
+                    <p className="project-desc">{project.description}</p>
+
+                    <div className="project-stack-inline">
+                      {project.stack.map((tech) => (
+                        <span key={tech} className="project-tag">{tech}</span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="project-footer">
+                    <div className="flex items-center gap-2">
+                      <a href={project.demo} target="_blank" rel="noreferrer" className="project-link" title="Live Demo">
+                        <FiArrowUpRight size={14} />
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
               </ElectricBorder>
             </Motion.article>
           ))}
