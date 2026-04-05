@@ -44,11 +44,19 @@ function tick(dt) {
 tick()`
 }
 
-const INITIAL_CSS = `/* Live Theme — edit any value */
+const INITIAL_CSS_DARK = `/* Live Theme — edit any value */
 :root {
   --accent:  #06b6d4;
   --bg:      #0f172a;
   --text:    #f1f5f9;
+  --radius:  12px;
+}`
+
+const INITIAL_CSS_LIGHT = `/* Live Theme — edit any value */
+:root {
+  --accent:  #1d7a6a;
+  --bg:      #eef3ef;
+  --text:    #1f2937;
   --radius:  12px;
 }`
 
@@ -114,13 +122,13 @@ function SceneMesh({ shape, color, wireframe, speed }) {
 
 function WindowBar({ filename, live = false }) {
   return (
-    <div className="flex items-center gap-2 px-4 py-3 border-b border-white/8 bg-white/3 shrink-0">
+    <div className="playground-windowbar flex items-center gap-2 px-4 py-3 shrink-0">
       <span className="w-3 h-3 rounded-full bg-red-400/70" />
       <span className="w-3 h-3 rounded-full bg-yellow-400/70" />
       <span className="w-3 h-3 rounded-full bg-green-400/70" />
-      <span className="ml-2 text-xs text-slate-500 font-mono">{filename}</span>
+      <span className="playground-windowbar-filename ml-2 text-xs font-mono">{filename}</span>
       {live && (
-        <span className="ml-auto flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
+        <span className="playground-windowbar-live ml-auto flex items-center gap-1.5 text-xs font-mono">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
           live
         </span>
@@ -133,9 +141,17 @@ function WindowBar({ filename, live = false }) {
 
 export default function Playground() {
   const [tab, setTab] = useState('theme')
+  const [isLightTheme, setIsLightTheme] = useState(() => {
+    if (typeof document === 'undefined') return false
+    return document.documentElement.classList.contains('theme-light')
+  })
+  const [css, setCss] = useState(() => {
+    if (typeof document === 'undefined') return INITIAL_CSS_DARK
+    const light = document.documentElement.classList.contains('theme-light')
+    return light ? INITIAL_CSS_LIGHT : INITIAL_CSS_DARK
+  })
 
   // Theme tab
-  const [css, setCss] = useState(INITIAL_CSS)
   const vars    = parseCSSVars(css)
   const accent  = vars['accent']  || '#06b6d4'
   const bg      = vars['bg']      || '#0f172a'
@@ -315,6 +331,30 @@ export default function Playground() {
     return cells
   }, [snake])
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return undefined
+
+    const root = document.documentElement
+    const updateThemeState = () => {
+      setIsLightTheme(root.classList.contains('theme-light'))
+    }
+
+    const observer = new MutationObserver(updateThemeState)
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] })
+    updateThemeState()
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    // Keep defaults in sync with app theme, but do not override custom user edits.
+    setCss((currentCss) => {
+      const isUsingDefault = currentCss === INITIAL_CSS_DARK || currentCss === INITIAL_CSS_LIGHT
+      if (!isUsingDefault) return currentCss
+      return isLightTheme ? INITIAL_CSS_LIGHT : INITIAL_CSS_DARK
+    })
+  }, [isLightTheme])
+
   return (
     <section id="playground" data-reveal className="reveal-section px-4 py-24 md:px-8 md:py-32 relative overflow-hidden">
       {/* bg blobs */}
@@ -325,13 +365,13 @@ export default function Playground() {
 
       <div className="mx-auto w-full max-w-6xl relative z-10">
         <SectionHeading
-          eyebrow="Live Playground"
+          eyebrow="06 - Live Playground"
           title="Code that runs right here"
           description="Edit the theme code and watch the preview update instantly, or manipulate a 3D scene with live Three.js output — all in your browser, no setup needed."
         />
 
         {/* Tab switcher */}
-        <div className="mt-12 flex gap-1 p-1 bg-white/5 rounded-xl w-fit border border-white/10">
+        <div className="playground-tabs" role="tablist" aria-label="Live playground modes">
           {[
             { id: 'theme', label: 'Theme Switcher' },
             { id: '3d',    label: '3D Scene'        },
@@ -340,11 +380,9 @@ export default function Playground() {
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                tab === t.id
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/40'
-                  : 'text-slate-400 hover:text-white'
-              }`}
+              role="tab"
+              aria-selected={tab === t.id}
+              className={`playground-tab-btn ${tab === t.id ? 'is-active' : ''}`}
             >
               {t.label}
             </button>
@@ -364,7 +402,7 @@ export default function Playground() {
               className="mt-6 grid md:grid-cols-2 gap-4 items-stretch"
             >
               {/* Editor panel */}
-              <div className="rounded-2xl border border-white/10 bg-slate-950/80 overflow-hidden flex flex-col min-h-72">
+              <div className="playground-panel rounded-2xl overflow-hidden flex flex-col min-h-72">
                 <WindowBar filename="theme.css" live />
                 <div className="flex-1 overflow-auto">
                   <Editor
@@ -385,7 +423,7 @@ export default function Playground() {
               </div>
 
               {/* Preview panel */}
-              <div className="rounded-2xl border border-white/10 bg-slate-950/80 overflow-hidden flex flex-col min-h-72">
+              <div className="playground-panel rounded-2xl overflow-hidden flex flex-col min-h-72">
                 <WindowBar filename="preview" live />
                 <div
                   className="flex-1 flex items-center justify-center p-8 transition-colors duration-300"
@@ -443,10 +481,10 @@ export default function Playground() {
               className="mt-6 grid md:grid-cols-2 gap-4 items-stretch"
             >
               {/* Live code panel */}
-              <div className="rounded-2xl border border-white/10 bg-slate-950/80 overflow-hidden flex flex-col min-h-72">
+              <div className="playground-panel rounded-2xl overflow-hidden flex flex-col min-h-72">
                 <WindowBar filename="scene.js" live />
                 <pre
-                  className="flex-1 overflow-auto p-5 text-slate-300 prism-code"
+                  className="playground-code flex-1 overflow-auto p-5 prism-code"
                   style={{
                     fontFamily: '"Fira Code", "Fira Mono", monospace',
                     fontSize: 12.5,
@@ -464,12 +502,12 @@ export default function Playground() {
               </div>
 
               {/* Canvas + controls */}
-              <div className="rounded-2xl border border-white/10 bg-slate-950/80 overflow-hidden flex flex-col min-h-72">
+              <div className="playground-panel rounded-2xl overflow-hidden flex flex-col min-h-72">
                 <WindowBar filename="canvas" />
                 {/* Three.js canvas */}
                 <div className="flex-1 min-h-56">
                   <Canvas camera={{ position: [0, 0, 4.5], fov: 45 }}>
-                    <color attach="background" args={['#020617']} />
+                    <color attach="background" args={[isLightTheme ? '#edf5f2' : '#020617']} />
                     <ambientLight intensity={0.6} />
                     <directionalLight position={[4, 4, 4]} intensity={1.4} />
                     <pointLight position={[-4, -4, -4]} intensity={0.8} color={meshColor} />
@@ -483,7 +521,7 @@ export default function Playground() {
                 </div>
 
                 {/* Controls */}
-                <div className="px-5 py-4 border-t border-white/8 bg-white/2 space-y-3.5">
+                <div className="playground-controls px-5 py-4 space-y-3.5">
                   {/* Shape */}
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="text-xs text-slate-400 w-16 shrink-0">Shape</span>
@@ -492,10 +530,10 @@ export default function Playground() {
                         <button
                           key={s}
                           onClick={() => setShape(s)}
-                          className={`text-xs px-2.5 py-1 rounded-lg border transition-all ${
+                          className={`playground-chip text-xs px-2.5 py-1 rounded-lg border transition-all ${
                             shape === s
-                              ? 'border-cyan-400/60 bg-cyan-400/15 text-cyan-300'
-                              : 'border-white/10 text-slate-400 hover:text-white hover:border-white/20'
+                              ? 'is-active'
+                              : 'is-inactive'
                           }`}
                         >
                           {s.replace('Geometry', '')}
@@ -534,12 +572,10 @@ export default function Playground() {
                     <span className="text-xs text-slate-400 w-16 shrink-0">Wireframe</span>
                     <button
                       onClick={() => setWireframe((w) => !w)}
-                      className={`relative w-9 h-5 shrink-0 rounded-full transition-colors duration-200 ${
-                        wireframe ? 'bg-cyan-500' : 'bg-slate-700'
-                      }`}
+                      className={`playground-toggle relative w-9 h-5 shrink-0 rounded-full ${wireframe ? 'is-on' : ''}`}
                     >
                       <span
-                        className={`absolute left-0.5 top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200 ${
+                        className={`playground-toggle-knob absolute left-0.5 top-0.5 w-4 h-4 rounded-full shadow transition-transform duration-200 ${
                           wireframe ? 'translate-x-0' : 'translate-x-[18px]'
                         }`}
                       />
@@ -563,7 +599,7 @@ export default function Playground() {
               transition={{ duration: 0.25 }}
               className="mt-6 grid md:grid-cols-2 gap-4 items-stretch"
             >
-              <div className="rounded-2xl border border-white/10 bg-slate-950/80 overflow-hidden flex flex-col min-h-72">
+              <div className="playground-panel rounded-2xl overflow-hidden flex flex-col min-h-72">
                 <WindowBar filename="snake-controls.js" live />
                 <div className="p-5 space-y-4">
                   <div className="flex items-center justify-between gap-3 text-xs font-mono text-slate-400">
@@ -574,19 +610,19 @@ export default function Playground() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <button
                       onClick={startSnake}
-                      className="px-3 py-1.5 rounded-lg border border-cyan-400/45 bg-cyan-500/15 text-cyan-300 text-xs font-semibold"
+                      className="playground-btn-accent px-3 py-1.5 rounded-lg text-xs font-semibold"
                     >
                       {snakeStatus === 'running' ? 'Running' : 'Start'}
                     </button>
                     <button
                       onClick={toggleSnakePause}
-                      className="px-3 py-1.5 rounded-lg border border-white/20 text-slate-300 text-xs font-semibold hover:text-white"
+                      className="playground-btn-neutral px-3 py-1.5 rounded-lg text-xs font-semibold"
                     >
                       {snakeStatus === 'paused' ? 'Resume' : 'Pause'}
                     </button>
                     <button
                       onClick={resetSnake}
-                      className="px-3 py-1.5 rounded-lg border border-white/20 text-slate-300 text-xs font-semibold hover:text-white"
+                      className="playground-btn-neutral px-3 py-1.5 rounded-lg text-xs font-semibold"
                     >
                       Reset
                     </button>
@@ -608,7 +644,7 @@ export default function Playground() {
                     />
                   </div>
 
-                  <div className="rounded-xl border border-white/10 bg-white/3 px-3 py-2 text-xs text-slate-400 leading-relaxed">
+                  <div className="playground-snake-hint rounded-xl px-3 py-2 text-xs leading-relaxed">
                     Use Arrow keys or WASD to move. Press Space to pause and resume.
                     {snakeStatus === 'over' && (
                       <span className="block text-rose-300 mt-1">Game over. Press Start to play again.</span>
@@ -623,12 +659,12 @@ export default function Playground() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-slate-950/80 overflow-hidden flex flex-col min-h-72">
+              <div className="playground-panel rounded-2xl overflow-hidden flex flex-col min-h-72">
                 <WindowBar filename="snake-canvas" />
                 <div className="flex-1 p-4 sm:p-5 flex items-center justify-center">
-                  <div className="w-full max-w-[340px] aspect-square rounded-2xl border border-white/10 bg-[#071022] p-2.5 shadow-[0_20px_50px_rgba(2,8,23,0.7)]">
+                  <div className="playground-snake-board w-full max-w-[340px] aspect-square rounded-2xl p-2.5">
                     <div
-                      className="grid w-full h-full rounded-lg overflow-hidden border border-cyan-500/15"
+                      className="playground-snake-grid grid w-full h-full rounded-lg overflow-hidden"
                       style={{ gridTemplateColumns: `repeat(${SNAKE_GRID_SIZE}, minmax(0, 1fr))` }}
                     >
                       {Array.from({ length: SNAKE_GRID_SIZE * SNAKE_GRID_SIZE }).map((_, index) => {
@@ -641,15 +677,15 @@ export default function Playground() {
                         return (
                           <div
                             key={`${x}-${y}`}
-                            className="border border-[#0d1b30]"
+                            className="playground-snake-cell"
                             style={{
                               background: isFood
-                                ? 'radial-gradient(circle at center, rgba(56,189,248,0.95), rgba(6,182,212,0.25))'
+                                ? 'radial-gradient(circle at center, var(--snake-food-core), var(--snake-food-glow))'
                                 : isHead
-                                  ? 'linear-gradient(135deg, #67e8f9, #0ea5e9)'
+                                  ? 'linear-gradient(135deg, var(--snake-head-start), var(--snake-head-end))'
                                   : filled
-                                    ? 'linear-gradient(135deg, rgba(56,189,248,0.78), rgba(8,145,178,0.65))'
-                                    : 'rgba(2, 8, 23, 0.8)',
+                                    ? 'linear-gradient(135deg, var(--snake-body-start), var(--snake-body-end))'
+                                    : 'var(--snake-cell-empty)',
                             }}
                           />
                         )

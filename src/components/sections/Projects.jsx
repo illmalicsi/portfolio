@@ -10,7 +10,7 @@ function Projects() {
     <section id="projects" data-reveal className="reveal-section px-4 py-16 md:px-8 md:py-20">
       <div className="mx-auto w-full max-w-6xl">
         <div>
-          <div className="section-tag">02 - Work</div>
+          <div className="section-tag">05 - Projects</div>
           <h2 className="section-title">Selected Projects</h2>
           <p className="section-subtitle">A curated look at what I&apos;ve been building.</p>
         </div>

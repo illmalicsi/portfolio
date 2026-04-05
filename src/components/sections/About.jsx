@@ -1,9 +1,27 @@
 ﻿import { motion as Motion } from 'framer-motion'
-import profileImage from '../../assets/MALICSI, IVAN LOUIE.jpg'
+import { useEffect, useState } from 'react'
+import me1 from '../../assets/me1.jpeg'
+import me2 from '../../assets/me2.jpeg'
+import me3 from '../../assets/me3.jpeg'
+import me4 from '../../assets/me4.jpeg'
+import me5 from '../../assets/me5.jpeg'
+import me6 from '../../assets/me6.jpeg'
 import { aboutData, skillGroups } from '../../data/portfolioData'
 
 function About() {
   const skillChips = skillGroups.flatMap((group) => group.skills).slice(0, 8)
+  const carouselImages = [me1, me2, me3, me4, me5, me6]
+  const [activeSlide, setActiveSlide] = useState(0)
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % carouselImages.length)
+    }, 3200)
+
+    return () => {
+      window.clearInterval(intervalId)
+    }
+  }, [carouselImages.length])
 
   return (
     <section id="about" data-reveal className="reveal-section px-4 py-16 md:px-8 md:py-20">
@@ -46,7 +64,30 @@ function About() {
           >
             <div className="about-photo-frame">
               <div className="about-photo-placeholder">
-                <img src={profileImage} alt="Ivan Louie L. Malicsi" className="h-full w-full object-cover" />
+                <div
+                  className="about-carousel-track"
+                  style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+                >
+                  {carouselImages.map((imageSrc, index) => (
+                    <img
+                      key={imageSrc}
+                      src={imageSrc}
+                      alt={`Ivan Louie L. Malicsi memory ${index + 1}`}
+                      className="about-carousel-image"
+                    />
+                  ))}
+                </div>
+                <div className="about-carousel-dots" aria-label="About image carousel indicators">
+                  {carouselImages.map((_, index) => (
+                    <button
+                      key={`dot-${index}`}
+                      type="button"
+                      className={`about-carousel-dot ${activeSlide === index ? 'is-active' : ''}`}
+                      onClick={() => setActiveSlide(index)}
+                      aria-label={`Show memory ${index + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
               <div className="corner-accent tl" />
               <div className="corner-accent tr" />

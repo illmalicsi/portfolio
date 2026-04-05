@@ -29,10 +29,11 @@ import aslImage from '../assets/asl.png'
 export const navLinks = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
+  { label: 'Hackathon Experience', href: '#hackathon' },
   { label: 'Skills', href: '#skills' },
-  { label: 'Playground', href: '#playground' },
-  { label: 'Projects', href: '#projects' },
   { label: 'Experience', href: '#experience' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Live Playground', href: '#playground' },
   { label: 'Contact', href: '#contact' },
 ]
 

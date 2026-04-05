@@ -8,12 +8,13 @@ import About from './components/sections/About'
 import Contact from './components/sections/Contact'
 import Experience from './components/sections/Experience'
 import Footer from './components/sections/Footer'
+import HackathonJourney from './components/sections/HackathonJourney'
 import Hero from './components/sections/Hero'
 import Projects from './components/sections/Projects'
 import Skills from './components/sections/Skills'
 import Playground from './components/sections/Playground'
 
-const sectionIds = ['home', 'about', 'skills', 'playground', 'projects', 'experience', 'contact']
+const sectionIds = ['home', 'about', 'hackathon', 'skills', 'experience', 'projects', 'playground', 'contact']
 const themeKey = 'portfolio-theme'
 
 function getInitialTheme() {
@@ -106,10 +107,11 @@ function App() {
         >
           <Hero />
           <About />
+          <HackathonJourney />
           <Skills />
-          <Playground />
-          <Projects />
           <Experience />
+          <Projects />
+          <Playground />
           <Contact />
         </Motion.main>
 

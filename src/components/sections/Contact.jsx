@@ -6,7 +6,7 @@ function Contact() {
     <section id="contact" data-reveal className="reveal-section px-4 py-16 text-center md:px-8 md:py-20">
       <div className="mx-auto w-full max-w-6xl">
         <div>
-          <div className="section-tag justify-center">05 - Contact</div>
+          <div className="section-tag justify-center">07 - Contact</div>
           <h2 className="contact-big">Let&apos;s Build <span>Something</span> Together</h2>
           <p className="contact-sub">
             Have a project in mind? Looking for a collaborator? I&apos;m always happy to connect.

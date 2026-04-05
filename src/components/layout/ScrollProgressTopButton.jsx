@@ -38,7 +38,7 @@ function ScrollProgressTopButton() {
           exit={{ opacity: 0, y: 12, scale: 0.9 }}
           transition={{ duration: 0.24, ease: 'easeOut' }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="scroll-top-btn group fixed bottom-5 right-4 z-50 inline-flex h-[58px] w-[58px] items-center justify-center rounded-full border border-white/20 bg-slate-900/75 text-slate-100 shadow-[0_10px_35px_-18px_rgba(34,211,238,0.7)] backdrop-blur-xl transition hover:border-cyan-300/60 hover:text-cyan-100 sm:bottom-7 sm:right-6"
+          className="scroll-top-btn group fixed bottom-5 right-4 z-50 inline-flex h-[58px] w-[58px] items-center justify-center rounded-full sm:bottom-7 sm:right-6"
         >
           <svg
             className="pointer-events-none absolute inset-0 -rotate-90"
@@ -54,7 +54,7 @@ function ScrollProgressTopButton() {
               fill="none"
               stroke="currentColor"
               strokeWidth={stroke}
-              className="scroll-top-ring-track text-white/15"
+              className="scroll-top-ring-track"
             />
             <circle
               cx={size / 2}
@@ -66,7 +66,7 @@ function ScrollProgressTopButton() {
               strokeLinecap="round"
               strokeDasharray={circumference}
               strokeDashoffset={strokeOffset}
-              className="scroll-top-ring-progress text-cyan-300 transition-[stroke-dashoffset] duration-150"
+              className="scroll-top-ring-progress transition-[stroke-dashoffset] duration-150"
             />
           </svg>
           <FiArrowUp size={18} className="relative" />

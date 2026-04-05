@@ -244,7 +244,7 @@ object {
   font-size: 0.7rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--section-accent, var(--gold));
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -255,7 +255,7 @@ object {
   content: '';
   width: 18px;
   height: 1px;
-  background: var(--gold);
+  background: var(--section-accent, var(--gold));
 }
 
 .section-subtitle {
@@ -980,11 +980,57 @@ object {
 }
 
 .about-photo-placeholder {
+  position: relative;
   width: 100%;
   height: 100%;
   background: var(--bg-3);
   border: 1px solid var(--border);
   overflow: hidden;
+}
+
+.about-carousel-track {
+  height: 100%;
+  display: flex;
+  transition: transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.about-carousel-image {
+  width: 100%;
+  height: 100%;
+  flex: 0 0 100%;
+  object-fit: cover;
+}
+
+.about-carousel-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 0.9rem;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  border-radius: 999px;
+  padding: 0.35rem 0.55rem;
+}
+
+.about-carousel-dot {
+  appearance: none;
+  cursor: pointer;
+  padding: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--text-dim) 40%, transparent);
+  background: color-mix(in srgb, var(--bg-3) 70%, transparent);
+  transition: width 220ms ease, background-color 220ms ease, border-color 220ms ease;
+}
+
+.about-carousel-dot.is-active {
+  width: 1.4rem;
+  background: var(--teal);
+  border-color: color-mix(in srgb, var(--teal) 65%, white);
 }
 
 .corner-accent {
@@ -1343,8 +1389,16 @@ object {
   width: 9px;
   height: 9px;
   border: 1px solid var(--gold);
-  background: var(--bg);
-  transform: rotate(45deg);
+  background: color-mix(in srgb, var(--gold) 30%, var(--bg) 70%);
+  transform: rotate(45deg) scale(0.72);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--gold) 42%, transparent);
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), background-color 260ms ease, box-shadow 260ms ease;
+}
+
+.timeline-item.is-active::before {
+  background: color-mix(in srgb, var(--gold) 84%, var(--bg) 16%);
+  transform: rotate(45deg) scale(1);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--gold) 18%, transparent);
 }
 
 .timeline-period {
@@ -1377,6 +1431,694 @@ object {
   line-height: 1.8;
   color: var(--text-dim);
   max-width: 580px;
+}
+
+.hackdoc-section {
+  --hack-accent: var(--teal);
+  --hack-text: var(--text);
+  --hack-muted: var(--text-dim);
+  --hack-surface: color-mix(in srgb, var(--bg-2) 92%, black 8%);
+  --hack-surface-soft: color-mix(in srgb, var(--bg-3) 84%, black 16%);
+  --hack-line: color-mix(in srgb, var(--border) 78%, var(--teal) 22%);
+  --hack-eyebrow: color-mix(in srgb, var(--teal) 70%, var(--text) 30%);
+  --hack-orbit: color-mix(in srgb, var(--teal) 45%, var(--border) 55%);
+  --hack-badge-bg: color-mix(in srgb, var(--teal) 22%, transparent);
+  --hack-badge-text: color-mix(in srgb, var(--teal) 86%, var(--text) 14%);
+  --hack-photo-bg: color-mix(in srgb, var(--bg-2) 95%, black 5%);
+  --hack-caption-bg: color-mix(in srgb, var(--bg) 72%, black 28%);
+  --hack-caption-text: color-mix(in srgb, var(--text) 88%, white 12%);
+  --hack-hours-label: color-mix(in srgb, var(--text-dim) 92%, var(--teal) 8%);
+  --hack-summary-num: color-mix(in srgb, var(--teal) 78%, var(--text) 22%);
+  --hack-summary-label: color-mix(in srgb, var(--text-muted) 90%, var(--teal) 10%);
+  --hack-node-border: color-mix(in srgb, var(--border) 76%, var(--teal) 24%);
+  --hack-node-bg: color-mix(in srgb, var(--bg-2) 90%, black 10%);
+  --hack-timing: color-mix(in srgb, var(--teal) 74%, var(--text) 26%);
+  --hack-tag-bg: color-mix(in srgb, var(--bg-3) 76%, black 24%);
+  --hack-tag-text: color-mix(in srgb, var(--text-muted) 88%, var(--teal) 12%);
+  --hack-tag-done-bg: color-mix(in srgb, var(--teal) 26%, transparent);
+  --hack-tag-done-text: color-mix(in srgb, var(--teal) 90%, white 10%);
+  --hack-quote-note: color-mix(in srgb, var(--text-muted) 88%, var(--teal) 12%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg) 96%, var(--teal) 4%),
+    color-mix(in srgb, var(--bg-2) 96%, var(--teal) 4%)
+  );
+}
+
+html.theme-light .hackdoc-section {
+  --hack-surface: color-mix(in srgb, var(--bg-2) 97%, white 3%);
+  --hack-surface-soft: color-mix(in srgb, var(--bg-3) 90%, white 10%);
+  --hack-line: color-mix(in srgb, var(--border) 70%, var(--teal) 30%);
+  --hack-eyebrow: color-mix(in srgb, var(--teal) 68%, var(--text) 32%);
+  --hack-orbit: color-mix(in srgb, var(--teal) 34%, var(--border) 66%);
+  --hack-badge-bg: color-mix(in srgb, var(--teal) 16%, white 84%);
+  --hack-badge-text: color-mix(in srgb, var(--teal) 84%, var(--text) 16%);
+  --hack-photo-bg: color-mix(in srgb, var(--bg-2) 96%, white 4%);
+  --hack-caption-bg: color-mix(in srgb, var(--bg) 42%, black 58%);
+  --hack-caption-text: color-mix(in srgb, var(--bg-2) 90%, white 10%);
+  --hack-hours-label: color-mix(in srgb, var(--text-dim) 86%, var(--teal) 14%);
+  --hack-summary-num: color-mix(in srgb, var(--teal) 76%, var(--text) 24%);
+  --hack-summary-label: color-mix(in srgb, var(--text-muted) 84%, var(--teal) 16%);
+  --hack-node-border: color-mix(in srgb, var(--border) 72%, var(--teal) 28%);
+  --hack-node-bg: color-mix(in srgb, var(--bg) 95%, white 5%);
+  --hack-timing: color-mix(in srgb, var(--teal) 74%, var(--text) 26%);
+  --hack-tag-bg: color-mix(in srgb, var(--bg-3) 88%, white 12%);
+  --hack-tag-text: color-mix(in srgb, var(--text-muted) 82%, var(--teal) 18%);
+  --hack-tag-done-bg: color-mix(in srgb, var(--teal) 20%, white 80%);
+  --hack-tag-done-text: color-mix(in srgb, var(--teal) 86%, var(--text) 14%);
+  --hack-quote-note: color-mix(in srgb, var(--text-muted) 82%, var(--teal) 18%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg-2) 94%, var(--teal) 6%),
+    color-mix(in srgb, var(--bg-3) 94%, var(--teal) 6%)
+  );
+}
+
+.hackdoc-hero {
+  text-align: center;
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+.hackdoc-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hack-eyebrow);
+}
+
+.hackdoc-title {
+  margin-top: 0.7rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.7rem, 7vw, 5.2rem);
+  letter-spacing: 0.025em;
+  line-height: 0.94;
+  color: var(--hack-text);
+}
+
+.hackdoc-title span {
+  color: var(--hack-accent);
+}
+
+.hackdoc-subtitle {
+  margin: 0.9rem auto 0;
+  max-width: 62ch;
+  color: var(--hack-muted);
+  font-size: 0.98rem;
+  line-height: 1.72;
+}
+
+.hackdoc-orbit {
+  width: 92px;
+  height: 92px;
+  margin: 1.5rem auto 0;
+  border: 1px solid var(--hack-orbit);
+  border-radius: 999px;
+  position: relative;
+}
+
+.hackdoc-orbit-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--hack-accent);
+  top: 50%;
+  left: 50%;
+  transform-origin: -36px center;
+  animation: hackdocOrbit 7s linear infinite;
+}
+
+@keyframes hackdocOrbit {
+  from {
+    transform: rotate(0deg) translateX(36px) translateY(-50%);
+  }
+  to {
+    transform: rotate(360deg) translateX(36px) translateY(-50%);
+  }
+}
+
+.hackdoc-badge {
+  margin: 1rem auto 0;
+  width: fit-content;
+  padding: 0.4rem 0.78rem;
+  border-radius: 999px;
+  background: var(--hack-badge-bg);
+  color: var(--hack-badge-text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hackdoc-media {
+  margin-top: 3rem;
+}
+
+.hackdoc-photo-main,
+.hackdoc-photo-build {
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--hack-surface);
+  box-shadow: 0 12px 26px rgba(21, 47, 39, 0.09);
+}
+
+.hackdoc-photo-main {
+  position: relative;
+  aspect-ratio: 16 / 6.7;
+  min-height: 210px;
+}
+
+.hackdoc-photo-build {
+  aspect-ratio: 16 / 9;
+  min-height: 180px;
+}
+
+.hackdoc-photo-main img,
+.hackdoc-photo-build img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  background: var(--hack-photo-bg);
+}
+
+.hackdoc-photo-main figcaption {
+  position: absolute;
+  left: 0.9rem;
+  bottom: 0.9rem;
+  padding: 0.34rem 0.62rem;
+  border-radius: 999px;
+  background: var(--hack-caption-bg);
+  color: var(--hack-caption-text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hackdoc-photo-build {
+  position: relative;
+}
+
+.hackdoc-photo-build figcaption {
+  position: absolute;
+  left: 0.72rem;
+  bottom: 0.72rem;
+  padding: 0.28rem 0.5rem;
+  border-radius: 999px;
+  background: var(--hack-caption-bg);
+  color: var(--hack-caption-text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.54rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hackdoc-media-lower {
+  margin-top: 0.85rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.hackdoc-hours-card {
+  border-radius: 16px;
+  background: var(--hack-surface);
+  display: grid;
+  place-content: center;
+  text-align: center;
+  box-shadow: 0 12px 24px rgba(21, 47, 39, 0.08);
+  min-height: 220px;
+}
+
+.hackdoc-hours-card .num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.6rem, 9vw, 5.3rem);
+  color: var(--hack-accent);
+  line-height: 0.9;
+}
+
+.hackdoc-hours-card .label {
+  margin-top: 0.45rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hack-hours-label);
+}
+
+.hackdoc-summary {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.hackdoc-summary article {
+  border-radius: 14px;
+  background: var(--hack-surface-soft);
+  padding: 0.9rem 0.8rem;
+  text-align: center;
+}
+
+.hackdoc-summary .num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.1rem, 5vw, 2.8rem);
+  color: var(--hack-summary-num);
+  line-height: 1;
+}
+
+.hackdoc-summary .label {
+  margin-top: 0.34rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--hack-summary-label);
+}
+
+.hackdoc-journey-divider {
+  margin: 2.2rem 0 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: color-mix(in srgb, var(--hack-summary-label) 88%, transparent);
+}
+
+.hackdoc-journey-divider::before,
+.hackdoc-journey-divider::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: color-mix(in srgb, var(--hack-line) 84%, transparent);
+}
+
+.hackdoc-journey-divider span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hackdoc-journey-divider-end {
+  margin: 1.35rem 0 1.8rem;
+}
+
+.hackdoc-timeline {
+  margin-top: 2.2rem;
+  position: relative;
+  padding-left: 5.3rem;
+}
+
+.hackdoc-timeline::before {
+  content: '';
+  position: absolute;
+  left: 34px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: color-mix(in srgb, var(--hack-line) 86%, transparent);
+  z-index: 0;
+}
+
+.hackdoc-timeline::after {
+  content: '';
+  position: absolute;
+  left: 34px;
+  top: 0;
+  width: 2px;
+  height: var(--timeline-progress, 0%);
+  background: color-mix(in srgb, var(--hack-accent) 88%, transparent);
+  transition: height 320ms ease;
+  z-index: 0;
+}
+
+.hackdoc-phase {
+  position: relative;
+  padding: 0 0 1.7rem;
+  margin-bottom: 1.8rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--hack-line) 88%, transparent);
+}
+
+.hackdoc-phase:last-child {
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+.hackdoc-node {
+  position: absolute;
+  left: -5.05rem;
+  top: 0.12rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--hack-node-border) 92%, transparent);
+  background: color-mix(in srgb, var(--hack-node-bg) 95%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 260ms ease, border-color 260ms ease, transform 260ms ease;
+  z-index: 2;
+}
+
+.hackdoc-node-icon {
+  width: 1.22rem;
+  height: 1.22rem;
+  color: color-mix(in srgb, var(--hack-tag-text) 88%, var(--hack-text) 12%);
+}
+
+.hackdoc-node.is-active {
+  border-color: color-mix(in srgb, var(--hack-accent) 92%, transparent);
+  background: color-mix(in srgb, var(--hack-accent) 88%, white 12%);
+}
+
+.hackdoc-node.is-active .hackdoc-node-icon {
+  color: #effff9;
+}
+
+.hackdoc-node.is-current {
+  transform: scale(1.04);
+}
+
+.hackdoc-phase-content {
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.hackdoc-phase .timing {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--hack-timing);
+}
+
+.hackdoc-phase h3 {
+  margin-top: 0.42rem;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: 0.03em;
+  line-height: 1;
+  color: var(--hack-text);
+}
+
+.hackdoc-phase .desc {
+  margin-top: 0.56rem;
+  color: var(--hack-muted);
+  font-size: 0.93rem;
+  line-height: 1.72;
+}
+
+.hackdoc-phase .tags {
+  margin-top: 0.74rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.hackdoc-phase .tags span {
+  padding: 0.31rem 0.56rem;
+  border-radius: 999px;
+  background: var(--hack-tag-bg);
+  color: var(--hack-tag-text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.57rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hackdoc-phase .tags span.is-done {
+  background: var(--hack-tag-done-bg);
+  color: var(--hack-tag-done-text);
+}
+
+.hackdoc-quote {
+  text-align: center;
+  margin: 2.3rem auto 0;
+  max-width: 760px;
+}
+
+.hackdoc-quote blockquote {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.05rem, 6vw, 3.6rem);
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  color: var(--hack-text);
+}
+
+.hackdoc-quote blockquote span {
+  color: var(--hack-accent);
+}
+
+.hackdoc-quote p {
+  margin-top: 0.7rem;
+  color: var(--hack-quote-note);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.playground-tabs {
+  margin-top: 3rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.36rem;
+  padding: 0.35rem;
+  border-radius: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--border) 72%, var(--teal) 28%);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--bg-2) 84%, black 16%),
+    color-mix(in srgb, var(--bg-3) 88%, black 12%)
+  );
+  box-shadow: 0 12px 30px -20px rgba(0, 0, 0, 0.65);
+}
+
+.playground-tab-btn {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 0.68rem;
+  padding: 0.54rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms ease;
+}
+
+.playground-tab-btn:hover {
+  color: var(--text);
+}
+
+.playground-tab-btn.is-active {
+  color: color-mix(in srgb, var(--teal) 84%, white 16%);
+  border-color: color-mix(in srgb, var(--teal) 48%, transparent);
+  background: color-mix(in srgb, var(--teal) 18%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--teal) 14%, transparent);
+}
+
+html.theme-light .playground-tabs {
+  border-color: color-mix(in srgb, var(--border) 66%, var(--teal) 34%);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--bg-2) 95%, white 5%),
+    color-mix(in srgb, var(--bg-3) 93%, white 7%)
+  );
+  box-shadow: 0 10px 24px -20px rgba(36, 43, 40, 0.38);
+}
+
+html.theme-light .playground-tab-btn {
+  color: color-mix(in srgb, var(--text-dim) 86%, var(--teal) 14%);
+}
+
+html.theme-light .playground-tab-btn:hover {
+  color: var(--text);
+}
+
+html.theme-light .playground-tab-btn.is-active {
+  color: color-mix(in srgb, var(--teal-dim) 88%, var(--text) 12%);
+  border-color: color-mix(in srgb, var(--teal-dim) 40%, transparent);
+  background: color-mix(in srgb, var(--teal) 20%, white 80%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--teal) 20%, transparent);
+}
+
+#playground {
+  --pg-panel-bg: color-mix(in srgb, var(--bg-2) 82%, black 18%);
+  --pg-panel-border: color-mix(in srgb, var(--border) 70%, white 10%);
+  --pg-bar-bg: color-mix(in srgb, var(--bg) 70%, white 6%);
+  --pg-bar-border: color-mix(in srgb, var(--border) 80%, transparent);
+  --pg-filename: color-mix(in srgb, var(--text-muted) 86%, transparent);
+  --pg-live: color-mix(in srgb, var(--teal) 76%, white 24%);
+  --pg-code: color-mix(in srgb, var(--text) 86%, white 14%);
+  --pg-controls-bg: color-mix(in srgb, var(--bg) 86%, white 2%);
+  --pg-controls-border: color-mix(in srgb, var(--border) 84%, transparent);
+  --pg-btn-neutral-text: color-mix(in srgb, var(--text-dim) 90%, white 10%);
+  --pg-btn-neutral-border: color-mix(in srgb, var(--border) 80%, white 20%);
+  --pg-btn-neutral-hover: var(--text);
+  --pg-btn-accent-text: color-mix(in srgb, var(--teal) 82%, white 18%);
+  --pg-btn-accent-bg: color-mix(in srgb, var(--teal) 16%, transparent);
+  --pg-btn-accent-border: color-mix(in srgb, var(--teal) 48%, transparent);
+  --pg-hint-bg: color-mix(in srgb, var(--bg-3) 58%, black 42%);
+  --pg-hint-border: color-mix(in srgb, var(--border) 88%, transparent);
+  --pg-hint-text: color-mix(in srgb, var(--text-muted) 90%, white 10%);
+  --pg-toggle-off: color-mix(in srgb, var(--bg-3) 72%, black 28%);
+  --pg-toggle-on: color-mix(in srgb, var(--teal) 70%, var(--teal-dim) 30%);
+  --pg-toggle-knob: #ffffff;
+  --snake-board-bg: #071022;
+  --snake-board-border: color-mix(in srgb, var(--border) 64%, white 16%);
+  --snake-grid-border: color-mix(in srgb, var(--teal) 28%, transparent);
+  --snake-cell-border: #0d1b30;
+  --snake-cell-empty: rgba(2, 8, 23, 0.8);
+  --snake-head-start: #67e8f9;
+  --snake-head-end: #0ea5e9;
+  --snake-body-start: rgba(56, 189, 248, 0.78);
+  --snake-body-end: rgba(8, 145, 178, 0.65);
+  --snake-food-core: rgba(56, 189, 248, 0.95);
+  --snake-food-glow: rgba(6, 182, 212, 0.25);
+}
+
+html.theme-light #playground {
+  --pg-panel-bg: color-mix(in srgb, var(--bg-2) 96%, white 4%);
+  --pg-panel-border: color-mix(in srgb, var(--border) 86%, var(--teal) 14%);
+  --pg-bar-bg: color-mix(in srgb, var(--bg-3) 88%, white 12%);
+  --pg-bar-border: color-mix(in srgb, var(--border) 84%, transparent);
+  --pg-filename: color-mix(in srgb, var(--text-muted) 82%, var(--teal) 18%);
+  --pg-live: color-mix(in srgb, var(--teal-dim) 84%, var(--text) 16%);
+  --pg-code: color-mix(in srgb, var(--text) 90%, var(--teal-dim) 10%);
+  --pg-controls-bg: color-mix(in srgb, var(--bg-3) 90%, white 10%);
+  --pg-controls-border: color-mix(in srgb, var(--border) 80%, transparent);
+  --pg-btn-neutral-text: color-mix(in srgb, var(--text-dim) 88%, var(--teal) 12%);
+  --pg-btn-neutral-border: color-mix(in srgb, var(--border) 86%, var(--teal) 14%);
+  --pg-btn-neutral-hover: var(--text);
+  --pg-btn-accent-text: color-mix(in srgb, var(--teal-dim) 90%, var(--text) 10%);
+  --pg-btn-accent-bg: color-mix(in srgb, var(--teal) 18%, white 82%);
+  --pg-btn-accent-border: color-mix(in srgb, var(--teal-dim) 32%, transparent);
+  --pg-hint-bg: color-mix(in srgb, var(--bg-2) 92%, white 8%);
+  --pg-hint-border: color-mix(in srgb, var(--border) 82%, transparent);
+  --pg-hint-text: color-mix(in srgb, var(--text-muted) 84%, var(--teal) 16%);
+  --pg-toggle-off: color-mix(in srgb, var(--bg-3) 78%, white 22%);
+  --pg-toggle-on: color-mix(in srgb, var(--teal-dim) 72%, var(--teal) 28%);
+  --pg-toggle-knob: #ffffff;
+  --snake-board-bg: color-mix(in srgb, var(--bg-2) 94%, white 6%);
+  --snake-board-border: color-mix(in srgb, var(--border) 86%, var(--teal) 14%);
+  --snake-grid-border: color-mix(in srgb, var(--teal) 32%, transparent);
+  --snake-cell-border: color-mix(in srgb, var(--border) 72%, var(--teal) 28%);
+  --snake-cell-empty: color-mix(in srgb, var(--bg-3) 84%, white 16%);
+  --snake-head-start: color-mix(in srgb, var(--teal) 76%, white 24%);
+  --snake-head-end: color-mix(in srgb, var(--teal-dim) 78%, var(--teal) 22%);
+  --snake-body-start: color-mix(in srgb, var(--teal) 58%, white 42%);
+  --snake-body-end: color-mix(in srgb, var(--teal-dim) 58%, white 42%);
+  --snake-food-core: color-mix(in srgb, var(--teal) 86%, white 14%);
+  --snake-food-glow: color-mix(in srgb, var(--teal) 26%, transparent);
+}
+
+.playground-panel {
+  border: 1px solid var(--pg-panel-border);
+  background: var(--pg-panel-bg);
+}
+
+.playground-windowbar {
+  border-bottom: 1px solid var(--pg-bar-border);
+  background: var(--pg-bar-bg);
+}
+
+.playground-windowbar-filename {
+  color: var(--pg-filename);
+}
+
+.playground-windowbar-live {
+  color: var(--pg-live);
+}
+
+.playground-code {
+  color: var(--pg-code);
+}
+
+.playground-controls {
+  border-top: 1px solid var(--pg-controls-border);
+  background: var(--pg-controls-bg);
+}
+
+.playground-chip.is-active {
+  border-color: color-mix(in srgb, var(--teal) 56%, transparent);
+  background: color-mix(in srgb, var(--teal) 16%, transparent);
+  color: color-mix(in srgb, var(--teal) 84%, white 16%);
+}
+
+.playground-chip.is-inactive {
+  border-color: color-mix(in srgb, var(--pg-controls-border) 70%, transparent);
+  color: var(--pg-btn-neutral-text);
+}
+
+.playground-chip.is-inactive:hover {
+  color: var(--pg-btn-neutral-hover);
+  border-color: color-mix(in srgb, var(--pg-controls-border) 88%, transparent);
+}
+
+.playground-btn-accent {
+  border: 1px solid var(--pg-btn-accent-border);
+  background: var(--pg-btn-accent-bg);
+  color: var(--pg-btn-accent-text);
+}
+
+.playground-btn-neutral {
+  border: 1px solid var(--pg-btn-neutral-border);
+  color: var(--pg-btn-neutral-text);
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.playground-btn-neutral:hover {
+  color: var(--pg-btn-neutral-hover);
+  border-color: color-mix(in srgb, var(--pg-btn-neutral-border) 88%, transparent);
+}
+
+.playground-toggle {
+  background: var(--pg-toggle-off);
+  transition: background-color 200ms ease;
+}
+
+.playground-toggle.is-on {
+  background: var(--pg-toggle-on);
+}
+
+.playground-toggle-knob {
+  background: var(--pg-toggle-knob);
+}
+
+.playground-snake-hint {
+  border: 1px solid var(--pg-hint-border);
+  background: var(--pg-hint-bg);
+  color: var(--pg-hint-text);
+}
+
+.playground-snake-board {
+  border: 1px solid var(--snake-board-border);
+  background: var(--snake-board-bg);
+  box-shadow: 0 20px 50px rgba(2, 8, 23, 0.45);
+}
+
+html.theme-light .playground-snake-board {
+  box-shadow: 0 18px 42px rgba(36, 43, 40, 0.18);
+}
+
+.playground-snake-grid {
+  border: 1px solid var(--snake-grid-border);
+}
+
+.playground-snake-cell {
+  border: 1px solid var(--snake-cell-border);
 }
 
 .contact-big {
@@ -1442,36 +2184,115 @@ object {
   box-shadow: 0 1px 0 rgba(201, 168, 76, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
-#about,
-#skills,
-#contact {
-  background: linear-gradient(180deg, rgba(17, 17, 20, 0.96), rgba(17, 17, 20, 0.96));
+#about {
+  --section-accent: var(--gold);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg) 94%, var(--gold) 6%),
+    color-mix(in srgb, var(--bg-2) 95%, var(--gold) 5%)
+  );
 }
 
-#projects,
-#experience,
+#skills {
+  --section-accent: var(--teal);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg) 95%, var(--teal) 5%),
+    color-mix(in srgb, var(--bg-2) 96%, var(--teal) 4%)
+  );
+}
+
 #playground {
+  --section-accent: color-mix(in srgb, var(--gold) 48%, var(--teal) 52%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg) 97%, var(--teal) 3%),
+    color-mix(in srgb, var(--bg) 97%, var(--gold) 3%)
+  );
+}
+
+#projects {
+  --section-accent: var(--gold-dim);
   background: transparent;
 }
 
+#experience {
+  --section-accent: color-mix(in srgb, var(--gold) 62%, var(--teal) 38%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg) 97%, var(--gold) 3%),
+    color-mix(in srgb, var(--bg-2) 97%, var(--teal) 3%)
+  );
+}
+
+#contact {
+  --section-accent: var(--gold);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg) 94%, var(--gold) 6%),
+    color-mix(in srgb, var(--bg-2) 95%, var(--gold) 5%)
+  );
+}
+
 .scroll-top-btn {
-  border-color: var(--border) !important;
-  background: rgba(24, 24, 28, 0.88) !important;
-  color: var(--text) !important;
-  box-shadow: 0 16px 40px -24px rgba(0, 0, 0, 0.95) !important;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, var(--gold) 20%);
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--bg-2) 88%, black 12%),
+    color-mix(in srgb, var(--bg) 90%, black 10%)
+  );
+  color: color-mix(in srgb, var(--text) 90%, var(--gold) 10%);
+  box-shadow:
+    0 14px 34px -18px rgba(0, 0, 0, 0.58),
+    inset 0 0 0 1px color-mix(in srgb, var(--gold) 12%, transparent);
+  backdrop-filter: blur(10px);
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .scroll-top-btn:hover {
-  border-color: var(--border-gold) !important;
-  color: var(--gold) !important;
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--gold) 60%, var(--border) 40%);
+  color: var(--gold);
+  box-shadow:
+    0 16px 38px -18px rgba(0, 0, 0, 0.64),
+    inset 0 0 0 1px color-mix(in srgb, var(--gold) 20%, transparent);
 }
 
 .scroll-top-ring-track {
-  color: rgba(255, 255, 255, 0.12) !important;
+  color: color-mix(in srgb, var(--text) 18%, transparent);
 }
 
 .scroll-top-ring-progress {
-  color: var(--gold) !important;
+  color: color-mix(in srgb, var(--gold) 86%, var(--teal) 14%);
+}
+
+html.theme-light .scroll-top-btn {
+  border-color: color-mix(in srgb, var(--border) 70%, var(--gold) 30%);
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--bg-2) 96%, white 4%),
+    color-mix(in srgb, var(--bg-3) 92%, white 8%)
+  );
+  color: color-mix(in srgb, var(--text) 88%, var(--gold) 12%);
+  box-shadow:
+    0 12px 28px -16px rgba(67, 56, 35, 0.28),
+    inset 0 0 0 1px color-mix(in srgb, var(--gold) 14%, transparent);
+}
+
+html.theme-light .scroll-top-btn:hover {
+  border-color: color-mix(in srgb, var(--gold) 65%, var(--border) 35%);
+  color: var(--gold-dim);
+  box-shadow:
+    0 14px 30px -16px rgba(67, 56, 35, 0.33),
+    inset 0 0 0 1px color-mix(in srgb, var(--gold) 22%, transparent);
+}
+
+html.theme-light .scroll-top-ring-track {
+  color: color-mix(in srgb, var(--text) 20%, transparent);
 }
 
 html.theme-light {
@@ -1612,10 +2433,44 @@ html.theme-light .hero2-highlight-item {
   color: #3a3840;
 }
 
-html.theme-light #about,
-html.theme-light #skills,
+html.theme-light #about {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg-2) 93%, var(--gold) 7%),
+    color-mix(in srgb, var(--bg-3) 93%, var(--gold) 7%)
+  );
+}
+
+html.theme-light #skills {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg-2) 94%, var(--teal) 6%),
+    color-mix(in srgb, var(--bg-3) 94%, var(--teal) 6%)
+  );
+}
+
+html.theme-light #playground {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg-2) 95%, var(--teal) 5%),
+    color-mix(in srgb, var(--bg-2) 95%, var(--gold) 5%)
+  );
+}
+
+html.theme-light #experience {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg-2) 95%, var(--gold) 5%),
+    color-mix(in srgb, var(--bg-3) 95%, var(--teal) 5%)
+  );
+}
+
 html.theme-light #contact {
-  background: linear-gradient(180deg, rgba(248, 242, 233, 0.65), rgba(248, 242, 233, 0.65));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--bg-2) 93%, var(--gold) 7%),
+    color-mix(in srgb, var(--bg-3) 93%, var(--gold) 7%)
+  );
 }
 
 @media (max-width: 640px) {
@@ -1833,6 +2688,88 @@ html.theme-light #contact {
 
   .timeline-item::before {
     left: -2px;
+  }
+
+  .hackdoc-title {
+    font-size: clamp(2.35rem, 12vw, 3.2rem);
+  }
+
+  .hackdoc-media {
+    margin-top: 2rem;
+  }
+
+  .hackdoc-media-lower {
+    grid-template-columns: 1fr;
+  }
+
+  .hackdoc-hours-card {
+    min-height: 160px;
+  }
+
+  .hackdoc-summary {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .hackdoc-journey-divider {
+    margin: 1.5rem 0 0.8rem;
+    gap: 0.6rem;
+  }
+
+  .hackdoc-journey-divider span {
+    font-size: 0.56rem;
+    letter-spacing: 0.18em;
+  }
+
+  .hackdoc-journey-divider-end {
+    margin: 1rem 0 1.2rem;
+  }
+
+  .playground-tabs {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .playground-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .playground-tab-btn {
+    white-space: nowrap;
+    padding: 0.52rem 0.86rem;
+    font-size: 0.68rem;
+  }
+
+  .hackdoc-timeline {
+    padding-left: 3.5rem;
+  }
+
+  .hackdoc-timeline::before {
+    left: 22px;
+  }
+
+  .hackdoc-timeline::after {
+    left: 22px;
+  }
+
+  .hackdoc-node {
+    left: -3.35rem;
+    width: 42px;
+    height: 42px;
+  }
+
+  .hackdoc-node-icon {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  .hackdoc-phase {
+    padding-bottom: 1.2rem;
+  }
+
+  .hackdoc-phase-content {
+    padding: 0.85rem 0.85rem;
   }
 
   .contact-big {
