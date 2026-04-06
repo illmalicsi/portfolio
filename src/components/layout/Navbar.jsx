@@ -2,6 +2,7 @@
 import { motion as Motion } from 'framer-motion'
 import { FiMenu, FiMoon, FiSun, FiX } from 'react-icons/fi'
 import { navLinks } from '../../data/portfolioData'
+import logoMe from '../../assets/logo_me.png'
 
 function Navbar({ activeSection, theme, toggleTheme }) {
   const [hovered, setHovered] = useState(null)
@@ -11,8 +12,12 @@ function Navbar({ activeSection, theme, toggleTheme }) {
     <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full px-3 pt-4 md:px-8 md:pt-5">
       <nav className="mx-auto w-full max-w-6xl rounded-2xl border border-[var(--border)] bg-[color:var(--nav-surface)] px-4 py-3 backdrop-blur-xl shadow-[var(--nav-shadow)] md:px-5">
         <div className="flex items-center justify-between">
-        <a href="#home" className="font-['Bebas_Neue'] text-lg tracking-[0.14em] text-[var(--text)] sm:text-xl">
-          IVAN<span className="text-[var(--gold)]">.</span>
+        <a href="#home" className="inline-flex items-center" aria-label="Go to Home">
+          <img
+            src={logoMe}
+            alt="Ivan logo"
+            className="h-10 w-auto object-contain sm:h-12"
+          />
         </a>
 
         <ul className="hidden items-center gap-7 md:flex">

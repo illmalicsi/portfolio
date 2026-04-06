@@ -2694,8 +2694,40 @@ html.theme-light #contact {
     font-size: clamp(2.35rem, 12vw, 3.2rem);
   }
 
+  .hackdoc-section {
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+  }
+
+  .hackdoc-eyebrow {
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+  }
+
+  .hackdoc-subtitle {
+    font-size: 0.88rem;
+    line-height: 1.58;
+  }
+
+  .hackdoc-badge {
+    max-width: 100%;
+    text-align: center;
+    font-size: 0.55rem;
+    letter-spacing: 0.07em;
+    white-space: normal;
+  }
+
   .hackdoc-media {
     margin-top: 2rem;
+  }
+
+  .hackdoc-photo-main {
+    aspect-ratio: 4 / 3;
+    min-height: 180px;
+  }
+
+  .hackdoc-photo-build {
+    min-height: 140px;
   }
 
   .hackdoc-media-lower {
@@ -2772,6 +2804,39 @@ html.theme-light #contact {
     padding: 0.85rem 0.85rem;
   }
 
+  .hackdoc-phase .timing {
+    font-size: 0.52rem;
+    letter-spacing: 0.1em;
+  }
+
+  .hackdoc-phase h3 {
+    font-size: clamp(1.2rem, 8vw, 1.55rem);
+    line-height: 1.05;
+  }
+
+  .hackdoc-phase .desc {
+    font-size: 0.86rem;
+    line-height: 1.58;
+  }
+
+  .hackdoc-phase .tags {
+    gap: 0.35rem;
+  }
+
+  .hackdoc-phase .tags span {
+    font-size: 0.5rem;
+    letter-spacing: 0.06em;
+  }
+
+  .hackdoc-quote blockquote {
+    font-size: clamp(1.65rem, 9vw, 2.45rem);
+    line-height: 1.08;
+  }
+
+  .hackdoc-quote p {
+    font-size: 0.78rem;
+  }
+
   .contact-big {
     margin: 1.2rem 0;
     font-size: clamp(2.3rem, 14vw, 3.35rem);
@@ -2803,6 +2868,90 @@ html.theme-light #contact {
 }
 
 @media (max-width: 430px) {
+  .hackdoc-section {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .hackdoc-title {
+    font-size: clamp(1.95rem, 12.5vw, 2.45rem);
+  }
+
+  .hackdoc-eyebrow {
+    letter-spacing: 0.08em;
+  }
+
+  .hackdoc-subtitle {
+    font-size: 0.82rem;
+    line-height: 1.52;
+  }
+
+  .hackdoc-badge {
+    padding: 0.34rem 0.5rem;
+  }
+
+  .hackdoc-photo-main,
+  .hackdoc-photo-build {
+    border-radius: 12px;
+  }
+
+  .hackdoc-photo-main {
+    min-height: 150px;
+  }
+
+  .hackdoc-photo-build {
+    aspect-ratio: 4 / 3;
+    min-height: 125px;
+  }
+
+  .hackdoc-journey-divider {
+    gap: 0.45rem;
+  }
+
+  .hackdoc-journey-divider::before,
+  .hackdoc-journey-divider::after {
+    display: none;
+  }
+
+  .hackdoc-journey-divider span {
+    letter-spacing: 0.12em;
+  }
+
+  .hackdoc-timeline {
+    margin-top: 1.35rem;
+    padding-left: 2.55rem;
+  }
+
+  .hackdoc-timeline::before,
+  .hackdoc-timeline::after {
+    left: 14px;
+  }
+
+  .hackdoc-node {
+    left: -2.45rem;
+    width: 34px;
+    height: 34px;
+    top: 0.2rem;
+  }
+
+  .hackdoc-node-icon {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+
+  .hackdoc-phase {
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.9rem;
+  }
+
+  .hackdoc-phase .desc {
+    line-height: 1.5;
+  }
+
+  .hackdoc-phase .tags span {
+    padding: 0.26rem 0.45rem;
+  }
+
   .hero2-title {
     font-size: clamp(2.1rem, 15vw, 3rem);
   }
