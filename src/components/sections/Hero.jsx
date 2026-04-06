@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion as Motion } from 'framer-motion'
-import { FiArrowUpRight, FiGithub, FiLinkedin, FiMail, FiUser } from 'react-icons/fi'
+import { FiFileText, FiGithub, FiLinkedin, FiMail, FiUser } from 'react-icons/fi'
 import profileImage from '../../assets/MALICSI, IVAN LOUIE.jpg'
 import { contactLinks, experience, heroData } from '../../data/portfolioData'
 
@@ -153,8 +153,14 @@ function Hero() {
                 )
               })}
 
-              <a href="#projects" className="hero-retro-link" aria-label="Projects">
-                <FiArrowUpRight size={18} />
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="hero-retro-link"
+                aria-label="Resume"
+              >
+                <FiFileText size={18} />
               </a>
             </div>
           </Motion.div>
