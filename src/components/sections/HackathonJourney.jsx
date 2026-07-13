@@ -1,4 +1,4 @@
-import { motion as Motion } from 'framer-motion'
+import { AnimatePresence, motion as Motion } from 'framer-motion'
 import { FiAperture, FiCheckCircle, FiCompass, FiFlag, FiShield, FiSun, FiZap } from 'react-icons/fi'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import nasa from '../../assets/nasa.jpeg'
@@ -102,6 +102,7 @@ function HackathonJourney() {
 
   const phaseRefs = useRef([])
   const [activePhaseIndex, setActivePhaseIndex] = useState(0)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
     const updateActivePhase = () => {
@@ -203,59 +204,88 @@ function HackathonJourney() {
           <span>THE JOURNEY</span>
         </div>
 
-        <section
-          className="hackdoc-timeline"
-          aria-label="Hackathon journey timeline"
-          style={{ '--timeline-progress': timelineProgress }}
-        >
-          {phases.map((phase, index) => (
-            <Motion.article
-              key={phase.title}
-              ref={(node) => {
-                phaseRefs.current[index] = node
-              }}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.45, delay: index * 0.04 }}
-              className="hackdoc-phase"
+        <div className="flex justify-center my-6">
+          <button 
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)} 
+            className="btn-secondary flex items-center gap-2 px-6 py-2.5 font-['Outfit'] text-[13px] font-medium tracking-wide shadow-sm"
+          >
+            {isExpanded ? 'Hide Journey Details' : 'Expand Journey Details'}
+            <Motion.span
+              animate={{ rotate: isExpanded ? 180 : 0 }}
+              transition={{ duration: 0.2 }}
+              className="inline-flex items-center justify-center font-bold"
             >
-              <div
-                className={`hackdoc-node ${index <= activePhaseIndex ? 'is-active' : ''} ${index === activePhaseIndex ? 'is-current' : ''}`}
-                aria-hidden="true"
-              >
-                <phase.icon className="hackdoc-node-icon" />
-              </div>
-              <div className="hackdoc-phase-content">
-                <p className="timing">{phase.timing}</p>
-                <h3>{phase.title}</h3>
-                <p className="desc">{phase.description}</p>
-                <div className="tags" aria-label={`${phase.title} tags`}>
-                  {phase.tags.map((tag) => (
-                    <span key={tag.label} className={tag.tone === 'done' ? 'is-done' : ''}>{tag.label}</span>
-                  ))}
-                </div>
-              </div>
-            </Motion.article>
-          ))}
-        </section>
-
-        <div className="hackdoc-journey-divider hackdoc-journey-divider-end" aria-hidden="true">
-          <span>END OF JOURNEY</span>
+              ↓
+            </Motion.span>
+          </button>
         </div>
 
-        <Motion.footer
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.5 }}
-          className="hackdoc-quote"
-        >
-          <blockquote>
-            We did not wait for certainty. We built, shared, and <span>looked up</span>.
-          </blockquote>
-          <p>Team Tala Verde · NASA Space Apps Challenge Davao 2025</p>
-        </Motion.footer>
+        <AnimatePresence initial={false}>
+          {isExpanded && (
+            <Motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.4, ease: 'easeInOut' }}
+              className="overflow-hidden"
+            >
+              <section
+                className="hackdoc-timeline"
+                aria-label="Hackathon journey timeline"
+                style={{ '--timeline-progress': timelineProgress }}
+              >
+                {phases.map((phase, index) => (
+                  <Motion.article
+                    key={phase.title}
+                    ref={(node) => {
+                      phaseRefs.current[index] = node
+                    }}
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.45, delay: index * 0.04 }}
+                    className="hackdoc-phase"
+                  >
+                    <div
+                      className={`hackdoc-node ${index <= activePhaseIndex ? 'is-active' : ''} ${index === activePhaseIndex ? 'is-current' : ''}`}
+                      aria-hidden="true"
+                    >
+                      <phase.icon className="hackdoc-node-icon" />
+                    </div>
+                    <div className="hackdoc-phase-content">
+                      <p className="timing">{phase.timing}</p>
+                      <h3>{phase.title}</h3>
+                      <p className="desc">{phase.description}</p>
+                      <div className="tags" aria-label={`${phase.title} tags`}>
+                        {phase.tags.map((tag) => (
+                          <span key={tag.label} className={tag.tone === 'done' ? 'is-done' : ''}>{tag.label}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </Motion.article>
+                ))}
+              </section>
+
+              <div className="hackdoc-journey-divider hackdoc-journey-divider-end" aria-hidden="true">
+                <span>END OF JOURNEY</span>
+              </div>
+
+              <Motion.footer
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5 }}
+                className="hackdoc-quote"
+              >
+                <blockquote>
+                  We did not wait for certainty. We built, shared, and <span>looked up</span>.
+                </blockquote>
+                <p>Team Tala Verde · NASA Space Apps Challenge Davao 2025</p>
+              </Motion.footer>
+            </Motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   )

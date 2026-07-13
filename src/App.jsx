@@ -1,8 +1,7 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion as Motion } from 'framer-motion'
 import Navbar from './components/layout/Navbar'
 import ParticleNetwork from './components/layout/ParticleNetwork'
-import SplashCursor from './components/layout/SplashCursor'
 import ScrollProgressTopButton from './components/layout/ScrollProgressTopButton'
 import About from './components/sections/About'
 import Contact from './components/sections/Contact'
@@ -94,7 +93,6 @@ function App() {
   return (
     <div className="relative overflow-x-hidden bg-[var(--bg)] text-[var(--text)]">
       <div className="page-bg-pattern pointer-events-none fixed inset-0 z-0" aria-hidden="true" />
-      <SplashCursor />
       <ParticleNetwork theme={theme} />
 
       <div className="relative z-10">

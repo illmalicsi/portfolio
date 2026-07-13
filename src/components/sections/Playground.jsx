@@ -348,11 +348,14 @@ export default function Playground() {
 
   useEffect(() => {
     // Keep defaults in sync with app theme, but do not override custom user edits.
-    setCss((currentCss) => {
-      const isUsingDefault = currentCss === INITIAL_CSS_DARK || currentCss === INITIAL_CSS_LIGHT
-      if (!isUsingDefault) return currentCss
-      return isLightTheme ? INITIAL_CSS_LIGHT : INITIAL_CSS_DARK
-    })
+    const timer = setTimeout(() => {
+      setCss((currentCss) => {
+        const isUsingDefault = currentCss === INITIAL_CSS_DARK || currentCss === INITIAL_CSS_LIGHT
+        if (!isUsingDefault) return currentCss
+        return isLightTheme ? INITIAL_CSS_LIGHT : INITIAL_CSS_DARK
+      })
+    }, 0)
+    return () => clearTimeout(timer)
   }, [isLightTheme])
 
   return (
