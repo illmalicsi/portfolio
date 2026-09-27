@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react'
-import { motion as Motion } from 'framer-motion'
+import React, { useRef, useEffect } from 'react'
+import gsap from 'gsap'
 import { isTouchDevice, prefersReducedMotion } from '../../config/animation'
 import { soundFx } from '../../utils/sound'
 
@@ -24,13 +24,33 @@ export default function MagneticButton({
   target,
   rel,
 }: MagneticButtonProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+  const innerRef = useRef<HTMLDivElement>(null)
+  const xTo = useRef<gsap.QuickToFunc | null>(null)
+  const yTo = useRef<gsap.QuickToFunc | null>(null)
+
+  useEffect(() => {
+    if (isTouchDevice() || prefersReducedMotion() || !innerRef.current) return
+
+    xTo.current = gsap.quickTo(innerRef.current, 'x', {
+      duration: 0.35,
+      ease: 'power3.out',
+    })
+    yTo.current = gsap.quickTo(innerRef.current, 'y', {
+      duration: 0.35,
+      ease: 'power3.out',
+    })
+
+    return () => {
+      xTo.current = null
+      yTo.current = null
+    }
+  }, [])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isTouchDevice() || prefersReducedMotion()) return
-    const el = ref.current
-    if (!el) return
+    const el = containerRef.current
+    if (!el || !xTo.current || !yTo.current) return
 
     const rect = el.getBoundingClientRect()
     const centerX = rect.left + rect.width / 2
@@ -38,11 +58,20 @@ export default function MagneticButton({
     const distanceX = (e.clientX - centerX) * strength
     const distanceY = (e.clientY - centerY) * strength
 
-    setPosition({ x: distanceX, y: distanceY })
+    xTo.current(distanceX)
+    yTo.current(distanceY)
   }
 
   const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 })
+    if (innerRef.current) {
+      gsap.to(innerRef.current, {
+        x: 0,
+        y: 0,
+        duration: 0.6,
+        ease: 'elastic.out(1.1, 0.4)',
+        overwrite: 'auto',
+      })
+    }
   }
 
   const handleClick = (e: React.MouseEvent) => {
@@ -65,15 +94,12 @@ export default function MagneticButton({
 
   return (
     <div
-      ref={ref}
+      ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="inline-block"
     >
-      <Motion.div
-        animate={{ x: position.x, y: position.y }}
-        transition={{ type: 'spring', damping: 18, stiffness: 220, mass: 0.1 }}
-      >
+      <div ref={innerRef} className="inline-block will-change-transform">
         {href ? (
           <a
             href={href}
@@ -93,7 +119,7 @@ export default function MagneticButton({
             {content}
           </button>
         )}
-      </Motion.div>
+      </div>
     </div>
   )
 }

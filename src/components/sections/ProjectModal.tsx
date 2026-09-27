@@ -17,13 +17,22 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
     setMounted(true)
   }, [])
 
-  // Lock background scroll while modal is active to prevent page jitter
+  // Lock background scroll and halt Lenis while modal is active
   useEffect(() => {
     if (project) {
       const originalOverflow = document.body.style.overflow
       document.body.style.overflow = 'hidden'
+
+      const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis
+      if (lenis && typeof lenis.stop === 'function') {
+        lenis.stop()
+      }
+
       return () => {
         document.body.style.overflow = originalOverflow
+        if (lenis && typeof lenis.start === 'function') {
+          lenis.start()
+        }
       }
     }
   }, [project])
@@ -45,7 +54,10 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   return createPortal(
     <AnimatePresence>
       {project && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-8 pt-12 sm:pt-16 overflow-y-auto">
+        <div
+          data-lenis-prevent
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-8 overflow-hidden"
+        >
           {/* Full Screen Blurred Backdrop strictly above Navbar (z-50) */}
           <Motion.div
             key="modal-backdrop"
@@ -63,6 +75,8 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           {/* Modal Window with silky spring pop-in & smooth exit */}
           <Motion.div
             key="modal-window"
+            data-lenis-prevent
+            onWheel={(e: React.WheelEvent) => e.stopPropagation()}
             initial={{ opacity: 0, scale: 0.93, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 16 }}
@@ -72,10 +86,10 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
               stiffness: 350,
               mass: 0.7,
             }}
-            className="relative my-auto max-h-[85vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-black/[0.1] dark:border-white/[0.14] bg-white dark:bg-[#0c0c0e] shadow-[0_30px_80px_rgba(0,0,0,0.18)] dark:shadow-[0_30px_90px_rgba(0,0,0,0.95)] flex flex-col z-[101]"
+            className="relative my-auto max-h-[88vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-black/[0.1] dark:border-white/[0.14] bg-white dark:bg-[#0c0c0e] shadow-[0_30px_80px_rgba(0,0,0,0.18)] dark:shadow-[0_30px_90px_rgba(0,0,0,0.95)] flex flex-col z-[101]"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-black/[0.08] dark:border-white/[0.08] px-6 py-4 bg-zinc-50 dark:bg-zinc-900/60 backdrop-blur-md">
+            <div className="flex items-center justify-between border-b border-black/[0.08] dark:border-white/[0.08] px-6 py-4 bg-zinc-50 dark:bg-zinc-900/60 backdrop-blur-md flex-shrink-0">
               <span className="font-mono text-xs text-zinc-600 dark:text-zinc-400 font-medium tracking-wider">
                 ARCHITECTURE_SPEC // {project.id.toUpperCase()}
               </span>
@@ -94,7 +108,11 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
 
             {/* Content Body */}
-            <div className="overflow-y-auto p-6 md:p-8 space-y-6">
+            <div
+              data-lenis-prevent
+              onWheel={(e) => e.stopPropagation()}
+              className="overflow-y-auto p-6 md:p-8 space-y-6 overscroll-contain flex-1 min-h-0"
+            >
               {/* Visual Banner */}
               <div className="relative aspect-[16/8] w-full overflow-hidden rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-zinc-100 dark:bg-zinc-900">
                 <img

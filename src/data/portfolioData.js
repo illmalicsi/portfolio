@@ -36,11 +36,12 @@ import synapsyApp from '../assets/synapsy-app.png'
 import caloTrack from '../assets/CaloTrack.png'
 import aslImage from '../assets/asl.png'
 import nasaImage from '../assets/nasa.jpeg'
+import nasa2Image from '../assets/nasa2.jpeg'
 
 export const navLinks = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
-  { label: 'Work', href: '#projects' },
+  { label: 'Projects', href: '#projects' },
   { label: 'Hackathon', href: '#hackathon' },
   { label: 'Experience', href: '#experience' },
   { label: 'Contact', href: '#contact' },

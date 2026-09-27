@@ -292,6 +292,19 @@ export function OrbitLedger({
   const rootRef = React.useRef<HTMLElement>(null);
   const scrollerRef = React.useRef<HTMLDivElement>(null);
   const [responsiveCardWidth, setResponsiveCardWidth] = React.useState(cardWidth);
+  const [isInView, setIsInView] = React.useState(true);
+
+  React.useEffect(() => {
+    if (!rootRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(rootRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   React.useEffect(() => {
     function handleResize() {
@@ -375,6 +388,7 @@ export function OrbitLedger({
   React.useEffect(() => {
     if (
       !autoPlay ||
+      !isInView ||
       reduceMotion ||
       mode !== 'contained' ||
       safeItems.length < 2

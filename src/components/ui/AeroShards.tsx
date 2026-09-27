@@ -20,9 +20,9 @@ const DETAIL_PRESETS = {
   fine: { count: 1.15, size: 0.7 }
 };
 const QUALITY_PRESETS = {
-  low: { count: 1900, dpr: 1.5, supersamplePixels: 3000000 },
-  medium: { count: 3200, dpr: 2, supersamplePixels: 6000000 },
-  high: { count: 4600, dpr: 2, supersamplePixels: 8000000 }
+  low: { count: 1400, dpr: 1.25, supersamplePixels: 2500000 },
+  medium: { count: 2400, dpr: 1.35, supersamplePixels: 4500000 },
+  high: { count: 3400, dpr: 1.4, supersamplePixels: 6000000 }
 };
 const RUNTIME_QUALITY = [{ countScale: 1 }, { countScale: 0.86 }, { countScale: 0.72 }];
 // Only the halo is downsampled. Shard edges keep their display-resolution detail.
@@ -1174,7 +1174,7 @@ const resolveDpr = (preset: QualityPreset, canvas: HTMLCanvasElement): number =>
   const cssPixels = Math.max(1, canvas.clientWidth * canvas.clientHeight);
   // The budget limits supersampling, never the one-pixel-per-CSS-pixel base image.
   const budgetDpr = Math.sqrt(preset.supersamplePixels / cssPixels);
-  return Math.max(1, Math.min(window.devicePixelRatio || 1, preset.dpr, budgetDpr));
+  return Math.max(1, Math.min(window.devicePixelRatio || 1, preset.dpr, budgetDpr, 1.25));
 };
 
 const resolveBloomSize = (size: readonly [number, number], qualityLevel = 0): [number, number] => {

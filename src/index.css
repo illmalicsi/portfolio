@@ -70,9 +70,30 @@ html.theme-light ::selection {
   box-sizing: border-box;
 }
 
-html {
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+html:not(.lenis) {
   scroll-behavior: smooth;
 }
+
 
 body {
   margin: 0;
@@ -269,3 +290,25 @@ html.theme-light .btn-secondary:hover {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* ── Infinite Loop Carousel for Selected Work (Framer-style) ────────── */
+@keyframes loop-carousel {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-loop-carousel {
+  display: flex;
+  width: max-content;
+  animation: loop-carousel 38s linear infinite;
+  will-change: transform;
+}
+
+.animate-loop-carousel[data-paused="true"] {
+  animation-play-state: paused;
+}
+

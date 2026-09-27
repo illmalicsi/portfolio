@@ -1,74 +1,85 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FiLayers } from 'react-icons/fi'
 import { projects } from '../../data/portfolioData'
-import OrbitLedger, { OrbitLedgerItem } from '../ui/OrbitLedger'
+import ProjectLoopCarousel from '../ui/ProjectLoopCarousel'
 import ProjectModal from './ProjectModal'
 import { soundFx } from '../../utils/sound'
+import { prefersReducedMotion } from '../../config/animation'
 import type { ProjectData } from '../ui/ProjectCard'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const projectAccentMap: Record<string, string> = {
   synapsy: '#a78bfa',
   dbemb: '#38bdf8',
-  'tala-verde': '#34d399',
   calotrack: '#fbbf24',
   asl: '#f43f5e',
 }
 
-const projectYearMap: Record<string, string> = {
-  synapsy: '2025',
-  dbemb: '2024',
-  'tala-verde': '2024',
-  calotrack: '2024',
-  asl: '2023',
-}
-
 export default function SelectedWork() {
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null)
-  const [activeOrbitIndex, setActiveOrbitIndex] = useState(0)
-  const [cardWidth, setCardWidth] = useState(280)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const carouselContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleResize = () => {
-      if (typeof window === 'undefined') return
-      if (window.innerWidth < 420) {
-        setCardWidth(240)
-      } else if (window.innerWidth < 640) {
-        setCardWidth(265)
-      } else {
-        setCardWidth(285)
+    if (prefersReducedMotion()) return
+
+    const ctx = gsap.context(() => {
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current.children,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            stagger: 0.1,
+            ease: 'power3.out',
+            clearProps: 'all',
+            scrollTrigger: {
+              trigger: headerRef.current,
+              start: 'top 92%',
+              once: true,
+            },
+          }
+        )
       }
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
 
-  const orbitItems: OrbitLedgerItem[] = useMemo(() => {
-    return projects.map((p) => ({
-      title: p.shortTitle || p.title,
-      eyebrow: p.badge,
-      year: projectYearMap[p.id] || '2024',
-      description: p.description,
-      image: p.image,
-      alt: p.title,
-      accent: projectAccentMap[p.id] || '#a78bfa',
-      href: p.demo || p.github,
-      tags: p.stack,
-      rawProject: p,
-    }))
-  }, [])
+      if (carouselContainerRef.current) {
+        gsap.fromTo(
+          carouselContainerRef.current,
+          { opacity: 0, y: 28 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            ease: 'power3.out',
+            clearProps: 'all',
+            scrollTrigger: {
+              trigger: carouselContainerRef.current,
+              start: 'top 90%',
+              once: true,
+            },
+          }
+        )
+      }
+    }, sectionRef)
 
-  const activeProject = projects[activeOrbitIndex] || projects[0]
+    return () => ctx.revert()
+  }, [])
 
   return (
-    <section id="projects" className="relative px-4 py-24 sm:px-6 md:py-32 lg:px-8 overflow-hidden">
-      <div className="mx-auto w-full max-w-5xl">
+    <section ref={sectionRef} id="projects" className="relative px-4 py-24 sm:px-6 md:py-32 lg:px-8 overflow-hidden">
+      <div className="mx-auto w-full max-w-7xl">
         
         {/* Section Header */}
-        <div className="mb-10 max-w-2xl">
+        <div ref={headerRef} className="mb-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">
             <FiLayers size={13} className="text-zinc-500 dark:text-zinc-400" />
-            <span>03 / Selected Work</span>
+            <span>03 / Projects</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-tight">
             Crafted Systems &amp; Engineering.
@@ -78,34 +89,14 @@ export default function SelectedWork() {
           </p>
         </div>
 
-        {/* Orbit Ledger 3D Showcase */}
-        <div className="relative">
-          <OrbitLedger
-            key="all-orbit-projects"
-            items={orbitItems}
-            mode="contained"
-            cardWidth={cardWidth}
-            curve={24}
-            depth={110}
-            tilt={20}
-            autoPlay={true}
-            autoPlayInterval={3800}
-            accent={activeProject ? projectAccentMap[activeProject.id] || '#a78bfa' : '#a78bfa'}
-            onActiveIndexChange={(idx) => {
-              setActiveOrbitIndex(idx)
-              soundFx.playHover()
-            }}
-            onCardClick={(item) => {
-              if (item.rawProject) {
-                soundFx.playClick()
-                setSelectedProject(item.rawProject as ProjectData)
-              }
-            }}
-            onViewClick={(item) => {
-              if (item.rawProject) {
-                soundFx.playClick()
-                setSelectedProject(item.rawProject as ProjectData)
-              }
+        {/* Framer-Style Loop Carousel Cards */}
+        <div ref={carouselContainerRef} className="relative">
+          <ProjectLoopCarousel
+            projects={projects}
+            accentMap={projectAccentMap}
+            onSelectProject={(project) => {
+              soundFx.playClick()
+              setSelectedProject(project)
             }}
           />
         </div>

@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FiBookOpen, FiChevronLeft, FiChevronRight, FiUsers, FiMaximize2, FiX, FiCpu } from 'react-icons/fi'
 import me1 from '../../assets/me1.jpeg'
 import me2 from '../../assets/me2.jpeg'
@@ -9,6 +11,9 @@ import me5 from '../../assets/me5.jpeg'
 import me6 from '../../assets/me6.jpeg'
 import { aboutData, skillsList } from '../../data/portfolioData'
 import { soundFx } from '../../utils/sound'
+import { prefersReducedMotion } from '../../config/animation'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const memories = [
   { img: me1, caption: 'Peer Collaboration & Study Sessions · Ateneo de Davao' },
@@ -23,6 +28,8 @@ export default function About() {
   const [activeSlide, setActiveSlide] = useState(0)
   const [hoveredSkill, setHoveredSkill] = useState<typeof skillsList[0] | null>(null)
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const statsRef = useRef<HTMLDivElement>(null)
 
   const disciplines = [
     { id: 'frontend', label: 'Frontend' },
@@ -41,7 +48,20 @@ export default function About() {
     setActiveSlide((prev) => (prev - 1 + memories.length) % memories.length)
   }
 
-  // Handle escape key to close lightbox
+  // Lock background scroll and halt Lenis while lightbox is active
+  useEffect(() => {
+    if (isLightboxOpen) {
+      document.body.style.overflow = 'hidden'
+      const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis
+      if (lenis && typeof lenis.stop === 'function') lenis.stop()
+      return () => {
+        document.body.style.overflow = ''
+        if (lenis && typeof lenis.start === 'function') lenis.start()
+      }
+    }
+  }, [isLightboxOpen])
+
+  // Handle escape & arrow keys for lightbox
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isLightboxOpen) {
@@ -56,28 +76,122 @@ export default function About() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isLightboxOpen])
 
+  // GSAP ScrollTrigger Entrance & Stats Counter
+  useEffect(() => {
+    if (prefersReducedMotion()) return
+
+    const ctx = gsap.context(() => {
+      // 1. Header reveal
+      gsap.fromTo(
+        '.about-header-item',
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.65,
+          ease: 'power3.out',
+          stagger: 0.1,
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: '.about-header-container',
+            start: 'top 92%',
+            once: true,
+          },
+        }
+      )
+
+      // 2. Bento cards reveal
+      gsap.fromTo(
+        '.about-bento-card',
+        { opacity: 0, y: 25 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+          stagger: 0.14,
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: '.about-bento-grid',
+            start: 'top 90%',
+            once: true,
+          },
+        }
+      )
+
+      // 3. Stats animated counter numbers
+      const statElements = statsRef.current?.querySelectorAll<HTMLElement>('.about-stat-number')
+      if (statElements && statElements.length > 0) {
+        ScrollTrigger.create({
+          trigger: statsRef.current,
+          start: 'top 92%',
+          once: true,
+          onEnter: () => {
+            statElements.forEach((el) => {
+              const targetStr = el.getAttribute('data-target') || '0'
+              const match = targetStr.match(/^(\d+)(.*)$/)
+              if (match) {
+                const targetNum = parseInt(match[1], 10)
+                const suffix = match[2] || ''
+                const counter = { val: 0 }
+                gsap.to(counter, {
+                  val: targetNum,
+                  duration: 1.2,
+                  ease: 'power2.out',
+                  onUpdate: () => {
+                    el.innerText = `${Math.floor(counter.val)}${suffix}`
+                  },
+                })
+              }
+            })
+          },
+        })
+      }
+
+      // 4. Skills container reveal (animates container cleanly without hiding internal buttons)
+      gsap.fromTo(
+        '.about-skills-matrix',
+        { opacity: 0, y: 25 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: '.about-skills-matrix',
+            start: 'top 92%',
+            once: true,
+          },
+        }
+      )
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <section id="about" className="relative px-4 py-24 sm:px-6 md:py-36 lg:px-8">
+    <section ref={sectionRef} id="about" className="relative px-4 py-24 sm:px-6 md:py-36 lg:px-8">
       <div className="mx-auto w-full max-w-5xl">
         
         {/* Section Header */}
-        <div className="mb-14">
-          <p className="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">
+        <div className="about-header-container mb-14">
+          <p className="about-header-item font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">
             02 / About &amp; Capabilities
           </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+          <h2 className="about-header-item text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
             Engineering Craft &amp; Mindset.
           </h2>
-          <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400 max-w-2xl">
+          <p className="about-header-item mt-2 text-base text-zinc-600 dark:text-zinc-400 max-w-2xl">
             A 4th-year computer science student driven by end-to-end product delivery, architecture rigor, and human-centered design.
           </p>
         </div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+        <div className="about-bento-grid grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
           
           {/* Bio Narrative (6 cols) */}
-          <div className="md:col-span-6 flex flex-col justify-between rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white/90 dark:bg-[#0c0c0e] p-8 shadow-sm dark:shadow-none backdrop-blur-xl">
+          <div className="about-bento-card md:col-span-6 flex flex-col justify-between rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white/90 dark:bg-[#0c0c0e] p-8 shadow-sm dark:shadow-none backdrop-blur-xl">
             <div>
               <div className="flex items-center gap-2 font-mono text-xs text-zinc-500 dark:text-zinc-400 mb-4">
                 <FiBookOpen size={14} className="text-zinc-900 dark:text-white" />
@@ -97,11 +211,14 @@ export default function About() {
               </blockquote>
             </div>
 
-            {/* Core Pillars */}
-            <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-black/[0.08] dark:border-white/[0.08]">
+            {/* Core Pillars / Stats */}
+            <div ref={statsRef} className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-black/[0.08] dark:border-white/[0.08]">
               {aboutData.stats.map((item) => (
                 <div key={item.label} className="min-w-0">
-                  <p className="text-xl font-bold text-zinc-900 dark:text-white">
+                  <p
+                    data-target={item.value}
+                    className="about-stat-number text-xl font-bold text-zinc-900 dark:text-white"
+                  >
                     {item.value}
                   </p>
                   <p
@@ -116,7 +233,7 @@ export default function About() {
           </div>
 
           {/* Real Campus Photos Filmstrip (6 cols) */}
-          <div className="md:col-span-6 rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white/90 dark:bg-[#0c0c0e] p-6 sm:p-7 shadow-sm dark:shadow-none backdrop-blur-xl flex flex-col justify-between group">
+          <div className="about-bento-card md:col-span-6 rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white/90 dark:bg-[#0c0c0e] p-6 sm:p-7 shadow-sm dark:shadow-none backdrop-blur-xl flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between font-mono text-xs text-zinc-500 dark:text-zinc-400 mb-3.5">
                 <span className="flex items-center gap-2">
@@ -215,7 +332,7 @@ export default function About() {
           </div>
 
           {/* Skills & Technologies Matrix (12 cols) — Compact, No Cards */}
-          <div className="md:col-span-12 rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white/90 dark:bg-[#0c0c0e] p-5 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-xl">
+          <div className="about-skills-matrix md:col-span-12 rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white/90 dark:bg-[#0c0c0e] p-5 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-xl">
             
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 sm:pb-6 border-b border-black/[0.06] dark:border-white/[0.08]">
@@ -277,7 +394,7 @@ export default function About() {
                               setHoveredSkill(skill)
                             }}
                             onMouseLeave={() => setHoveredSkill(null)}
-                            className={`group relative inline-flex items-center gap-1.5 sm:gap-2 rounded-lg border px-2.5 py-1.5 sm:px-3 sm:py-1.5 transition-all duration-200 cursor-pointer select-none active:scale-95 ${
+                            className={`about-skill-pill group relative inline-flex items-center gap-1.5 sm:gap-2 rounded-lg border px-2.5 py-1.5 sm:px-3 sm:py-1.5 transition-all duration-200 cursor-pointer select-none active:scale-95 ${
                               isHovered
                                 ? 'border-zinc-900/60 dark:border-white/60 bg-zinc-900/[0.07] dark:bg-white/[0.09] shadow-sm -translate-y-0.5'
                                 : 'border-black/[0.08] dark:border-white/[0.08] bg-black/[0.02] dark:bg-white/[0.02] hover:border-black/20 dark:hover:border-white/20'

@@ -10,30 +10,78 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function Timeline() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const railRef = useRef<HTMLDivElement>(null)
+  const progressLineRef = useRef<HTMLDivElement>(null)
   const [expandedIndex, setExpandedIndex] = useState(0)
 
   useEffect(() => {
     if (prefersReducedMotion()) return
 
     const ctx = gsap.context(() => {
+      // 1. Header reveal
+      gsap.fromTo(
+        '.timeline-header-item',
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          stagger: 0.1,
+          ease: 'power3.out',
+          clearProps: 'all',
+          scrollTrigger: {
+            trigger: '.timeline-header',
+            start: 'top 92%',
+            once: true,
+          },
+        }
+      )
+
+      // 2. Animated Progress Line down the rail
+      if (progressLineRef.current && railRef.current) {
+        gsap.to(progressLineRef.current, {
+          scaleY: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: railRef.current,
+            start: 'top 75%',
+            end: 'bottom 85%',
+            scrub: 0.5,
+          },
+        })
+      }
+
+      // 3. Staggered node dot & card entrance
       const items = containerRef.current?.querySelectorAll('.timeline-item-trigger')
       if (items && items.length > 0) {
         items.forEach((item) => {
-          gsap.fromTo(
-            item,
-            { opacity: 0, x: -35 },
-            {
-              opacity: 1,
-              x: 0,
-              duration: 0.7,
-              ease: 'power3.out',
-              scrollTrigger: {
-                trigger: item,
-                start: 'top 85%',
-                toggleActions: 'play none none none',
-              },
-            }
-          )
+          const dot = item.querySelector('.timeline-node-dot')
+          const card = item.querySelector('.timeline-card-content')
+
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 88%',
+              once: true,
+            },
+          })
+
+          if (dot) {
+            tl.fromTo(
+              dot,
+              { scale: 0, opacity: 0 },
+              { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(2)', clearProps: 'all' }
+            )
+          }
+
+          if (card) {
+            tl.fromTo(
+              card,
+              { opacity: 0, x: -20 },
+              { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out', clearProps: 'all' },
+              '-=0.25'
+            )
+          }
         })
       }
     }, containerRef)
@@ -51,20 +99,30 @@ export default function Timeline() {
       <div ref={containerRef} className="mx-auto w-full max-w-5xl">
         
         {/* Header */}
-        <div className="mb-14">
-          <p className="font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">
+        <div className="timeline-header mb-14">
+          <p className="timeline-header-item font-mono text-xs uppercase tracking-widest text-zinc-500 mb-2">
             04 / Trajectory &amp; Leadership
           </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
+          <h2 className="timeline-header-item text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
             Experience &amp; Community.
           </h2>
-          <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400 max-w-xl">
+          <p className="timeline-header-item mt-2 text-base text-zinc-600 dark:text-zinc-400 max-w-xl">
             Student governance committees, academic societies, and independent engineering milestones.
           </p>
         </div>
 
         {/* Vertical Timeline Rail */}
-        <div className="relative border-l border-zinc-200 dark:border-white/[0.1] ml-3 sm:ml-6 pl-6 sm:pl-10 space-y-6">
+        <div ref={railRef} className="relative ml-3 sm:ml-6 pl-6 sm:pl-10 space-y-6">
+          {/* Static track */}
+          <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-zinc-200 dark:bg-white/[0.1]" />
+          
+          {/* Dynamic GSAP Scrubbed Progress Line */}
+          <div
+            ref={progressLineRef}
+            className="absolute left-0 top-0 bottom-0 w-[2px] -translate-x-[0.5px] origin-top bg-gradient-to-b from-zinc-900 via-zinc-600 to-zinc-400 dark:from-white dark:via-zinc-200 dark:to-zinc-400 shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+            style={{ transform: 'scaleY(0)' }}
+          />
+
           {experience.map((item, index) => {
             const isExpanded = expandedIndex === index
 
@@ -75,7 +133,7 @@ export default function Timeline() {
               >
                 {/* Timeline Node Dot */}
                 <div
-                  className={`absolute -left-[31px] sm:-left-[47px] top-4 h-3.5 w-3.5 rounded-full border-2 transition-all ${
+                  className={`timeline-node-dot absolute -left-[31px] sm:-left-[47px] top-4 h-3.5 w-3.5 rounded-full border-2 transition-all ${
                     isExpanded
                       ? 'border-zinc-900 bg-zinc-900 ring-4 ring-zinc-900/20 dark:border-white dark:bg-white dark:ring-white/20'
                       : 'border-zinc-400 bg-zinc-100 dark:border-white/40 dark:bg-black'
@@ -86,7 +144,7 @@ export default function Timeline() {
                 <div
                   onClick={() => toggleExpand(index)}
                   data-cursor="pointer"
-                  className={`cursor-pointer rounded-2xl border p-6 backdrop-blur-xl transition-all duration-200 ${
+                  className={`timeline-card-content cursor-pointer rounded-2xl border p-6 backdrop-blur-xl transition-all duration-200 ${
                     isExpanded
                       ? 'border-zinc-900/20 dark:border-white/[0.22] bg-white dark:bg-[#0c0c0e] shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)]'
                       : 'border-black/[0.08] dark:border-white/[0.08] bg-white/70 dark:bg-[#0c0c0e]/60 hover:border-black/20 dark:hover:border-white/[0.15]'

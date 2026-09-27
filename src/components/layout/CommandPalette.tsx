@@ -20,6 +20,7 @@ import {
 } from 'react-icons/fi'
 import { personalInfo } from '../../data/portfolioData'
 import { soundFx } from '../../utils/sound'
+import { smoothScrollTo } from '../../utils/scroll'
 
 interface CommandPaletteProps {
   isOpen: boolean
@@ -65,10 +66,7 @@ export default function CommandPalette({
   const navigateTo = (hash: string) => {
     soundFx.playClick()
     onClose()
-    const el = document.querySelector(hash)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
-    }
+    smoothScrollTo(hash)
   }
 
   const items: CommandItem[] = [
@@ -89,8 +87,8 @@ export default function CommandPalette({
       action: () => navigateTo('#about'),
     },
     {
-      id: 'nav-work',
-      label: 'Explore Selected Work',
+      id: 'nav-projects',
+      label: 'Explore Projects',
       shortcut: '3',
       icon: <FiBriefcase size={15} />,
       category: 'Navigation',
@@ -119,6 +117,14 @@ export default function CommandPalette({
       icon: <FiMail size={15} />,
       category: 'Navigation',
       action: () => navigateTo('#contact'),
+    },
+    {
+      id: 'nav-contributions',
+      label: 'GitHub Contributions & Activity',
+      shortcut: '7',
+      icon: <FiGithub size={15} />,
+      category: 'Navigation',
+      action: () => navigateTo('#contributions'),
     },
     {
       id: 'action-copy',
