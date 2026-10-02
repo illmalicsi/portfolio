@@ -42,7 +42,6 @@ export const navLinks = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
-  { label: 'Hackathon', href: '#hackathon' },
   { label: 'Experience', href: '#experience' },
   { label: 'Contact', href: '#contact' },
 ]
@@ -62,7 +61,7 @@ export const personalInfo = {
   linkedin: 'https://linkedin.com/in/illmalicsi',
   yearsBuilding: '5+',
   projectsCompleted: '20+',
-  hackathonWins: 'NASA Space Apps Finalist',
+  hackathonSprint: 'NASA Space Apps Challenge',
 }
 
 export const heroData = {

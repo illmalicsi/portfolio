@@ -126,6 +126,7 @@ export default function CommandPalette({
       category: 'Navigation',
       action: () => navigateTo('#contributions'),
     },
+
     {
       id: 'action-copy',
       label: copied ? 'Email Copied to Clipboard!' : `Copy Email (${personalInfo.email})`,

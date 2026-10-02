@@ -15,6 +15,7 @@ import Timeline from './components/sections/Timeline'
 import Contact from './components/sections/Contact'
 import GithubContributions from './components/sections/GithubContributions'
 import Footer from './components/sections/Footer'
+import BottomScreenCat from './components/ui/BottomScreenCat'
 import BlogPostPage from './components/pages/BlogPostPage'
 import { hackathonBlogPosts } from './data/hackathonBlogData'
 
@@ -283,6 +284,9 @@ export default function App() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Persistent Bottom Screen Cat */}
+      <BottomScreenCat theme={theme} />
 
       {/* Full Page Blog Overlay */}
       {activeBlogPost && (

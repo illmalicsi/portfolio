@@ -57,19 +57,19 @@ export const singleHackathonBlog: HackathonBlogPost = {
   },
   heroImage: nasa2Img,
   heroCaption:
-    'Team Tala Verde on the main presentation stage delivering our live defense at the NASA Space Apps Challenge Davao finals.',
+    'Team Tala Verde on the main presentation stage delivering our live defense at the NASA Space Apps Challenge Davao pitch session.',
   excerpt:
-    'When the 48-hour countdown commenced, 30+ engineering squads were tasked with building software from NASA open Earth observation data. This is the story of how our team built Tala Verde, survived a 2:30 AM architecture pivot, and earned the Global Finalist rank.',
+    'When the 48-hour countdown commenced, 30+ engineering squads were tasked with building software from NASA open Earth observation data. This is the story of how our team built Tala Verde, survived a 2:30 AM architecture pivot, and delivered under high pressure.',
   stats: [
     { label: 'Sprint Duration', value: '48 Hours' },
     { label: 'Team Size', value: '6 Engineers' },
-    { label: 'Award', value: 'Global Finalist' },
+    { label: 'Milestone', value: 'Live Working Demo' },
     { label: 'Git Hygiene', value: '0 Merge Conflicts' },
   ],
   tags: [
     'NASA Space Apps',
     'Tala Verde',
-    'Global Finalist',
+    'Space Apps Davao',
     'FastAPI',
     'React',
     'Earth Observation',
@@ -134,15 +134,15 @@ export const singleHackathonBlog: HackathonBlogPost = {
     },
     {
       number: '05',
-      title: 'Global Finalist Honor & What 48 Hours Taught Us',
-      timing: 'Sunday · 08:00 PM — Award Ceremony & Reflections',
+      title: 'Constellation & What 48 Hours Taught Us',
+      timing: 'Sunday · 08:00 PM — Final Pitch & Reflections',
       image: talaverdeArt,
       imageCaption:
         'Tala Verde ("Green Star") — telemetry intelligence for planetary resilience.',
       paragraphs: [
-        'When the final decisions were announced, Team Tala Verde was awarded the Global Finalist ranking, advancing forward from the Davao chapter to represent our university and region on the global NASA Space Apps stage.',
-        'Beyond the plaque and accolades, the true triumph was the engineering velocity. Across 48 continuous hours, six teammates produced over 100 Git commits across separate branches with zero merge conflicts, supported one another through exhaustion, and transformed raw research ideas into an intuitive, production-grade application.',
-        'Tala Verde demonstrated that a passionate group of undergraduate developers from Davao can compete with the best and build technology meant for real-world impact.',
+        'Win or not, our team walked away with something no scoreboard can capture: an intense shared experience, battle-tested technical skills, and proof that six passionate students from Davao can tackle a complex engineering challenge built for planetary scale.',
+        'Beyond any accolades, the true triumph was the engineering velocity. Across 48 continuous hours, six teammates produced over 100 Git commits across separate branches with zero merge conflicts, supported one another through exhaustion, and transformed raw research ideas into an intuitive, production-grade application.',
+        'Tala Verde demonstrated that a dedicated group of undergraduate developers from Davao can collaborate under extreme pressure and build technology meant for real-world impact.',
       ],
     },
   ],
@@ -150,7 +150,7 @@ export const singleHackathonBlog: HackathonBlogPost = {
     'Great engineering under pressure is fundamentally an exercise in collective trust, decisive architectural pivots, and relentless user empathy. We built fast, adapted without ego, and looked up.',
   quote: {
     text: 'We did not wait for certainty. We built, shared, and looked up.',
-    attribution: 'Team Tala Verde · Official Global Finalist · NASA Space Apps Challenge Davao',
+    attribution: 'Team Tala Verde · NASA Space Apps Challenge Davao',
   },
 }
 
