@@ -6,6 +6,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navbar from './components/layout/Navbar'
 import CommandPalette from './components/layout/CommandPalette'
 import ScrollProgress from './components/ui/ScrollProgress'
+import GridGuides from './components/ui/GridGuides'
+import FilmGrain from './components/ui/FilmGrain'
+import CustomCursor from './components/ui/CustomCursor'
+import Preloader from './components/ui/Preloader'
 
 import Hero from './components/sections/Hero'
 import SelectedWork from './components/sections/SelectedWork'
@@ -19,7 +23,7 @@ import BottomScreenCat from './components/ui/BottomScreenCat'
 import BlogPostPage from './components/pages/BlogPostPage'
 import { hackathonBlogPosts } from './data/hackathonBlogData'
 
-import { prefersReducedMotion, isTouchDevice } from './config/animation'
+import { prefersReducedMotion, isTouchDevice } from './config/motion'
 import { soundFx } from './utils/sound'
 import { smoothScrollTo } from './utils/scroll'
 
@@ -29,10 +33,10 @@ const sectionIds = ['home', 'about', 'projects', 'hackathon', 'experience', 'con
 const themeKey = 'portfolio-theme'
 
 function getInitialTheme(): 'dark' | 'light' {
-  if (typeof window === 'undefined') return 'dark'
+  if (typeof window === 'undefined') return 'light'
   const storedTheme = window.localStorage.getItem(themeKey)
   if (storedTheme === 'light' || storedTheme === 'dark') return storedTheme
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  return 'light' // Swiss Dossier light-first default
 }
 
 export default function App() {
@@ -40,6 +44,13 @@ export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(getInitialTheme)
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false)
   const [isSoundOn, setIsSoundOn] = useState(() => soundFx.isEnabled())
+  const [isPreloaderFinished, setIsPreloaderFinished] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.sessionStorage.getItem('ilm_portfolio_preloader_seen') === 'true'
+    }
+    return false
+  })
+
   const [activeBlogSlug, setActiveBlogSlug] = useState<string | null>(() => {
     if (typeof window !== 'undefined' && window.location.hash.startsWith('#blog/')) {
       return window.location.hash.replace('#blog/', '')
@@ -86,7 +97,6 @@ export default function App() {
 
   // ── Lenis Smooth Scroll Synced with GSAP ScrollTrigger (Desktop only) ──
   useEffect(() => {
-    // Avoid running smooth scroll on touch/mobile devices or when reduced motion is preferred
     if (prefersReducedMotion() || isTouchDevice()) return
 
     const lenis = new Lenis({
@@ -98,7 +108,6 @@ export default function App() {
       touchMultiplier: 1.5,
     })
 
-    // Expose lenis instance globally for smoothScrollTo
     ;(window as unknown as { __lenis?: unknown }).__lenis = lenis
 
     lenis.on('scroll', ScrollTrigger.update)
@@ -108,7 +117,6 @@ export default function App() {
     }
 
     gsap.ticker.add(tickerCallback)
-    // Keep lag smoothing active to prevent frame-drop stuttering
     gsap.ticker.lagSmoothing(500, 33)
 
     return () => {
@@ -256,12 +264,27 @@ export default function App() {
     : null
 
   return (
-    <div className="relative min-h-screen bg-[var(--bg)] text-[var(--text)] selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-black">
+    <div className="relative min-h-screen bg-[var(--bg)] text-[var(--text)] selection:bg-[var(--vermilion)] selection:text-white transition-colors duration-200">
       
-      {/* Scroll Progress Bar at the top */}
+      {/* ── 1. One-time Session Preloader with SVG Stroke Animation & Curtain Wipe ── */}
+      <Preloader
+        onComplete={() => setIsPreloaderFinished(true)}
+        theme={theme}
+      />
+
+      {/* ── 2. Custom Cursor for Fine-Pointer Devices (Spring Lag + Ring + View Pill + Text Shrink) ── */}
+      <CustomCursor theme={theme} />
+
+      {/* ── 3. Subtle Analog Film-Grain Overlay (~3% Opacity, Pointer Events None) ── */}
+      <FilmGrain />
+
+      {/* ── 4. Scroll Progress Bar at the top (Vermilion) ── */}
       <ScrollProgress theme={theme} />
 
-      {/* Floating Minimalist Navbar */}
+      {/* ── 5. Visible 12-Column Grid Guides with Staggered scaleY Animation ── */}
+      <GridGuides theme={theme} />
+
+      {/* ── 6. Fixed Left Rail on Desktop / Top Bar on Mobile ── */}
       <Navbar
         activeSection={activeSection}
         theme={theme}
@@ -271,24 +294,29 @@ export default function App() {
         onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
       />
 
-      {/* Main Page Flow: About Me before Projects, then Hackathon Spotlight */}
-      <main className="relative z-10">
-        <Hero theme={theme} />
-        <About />
-        <SelectedWork />
-        <HackathonJourney onOpenPost={handleOpenBlogPost} />
-        <Timeline />
-        <Contact />
-        <GithubContributions theme={theme} />
-      </main>
+      {/* ── 7. Main Editorial Page Flow (Offset md:pl-[72px] for Fixed Left Rail) ── */}
+      <div className="md:pl-[72px] min-h-screen flex flex-col justify-between">
+        <main className="relative z-10 flex-1">
+          <Hero
+            theme={theme}
+            startAnimation={isPreloaderFinished}
+          />
+          <About />
+          <SelectedWork />
+          <HackathonJourney onOpenPost={handleOpenBlogPost} />
+          <Timeline />
+          <Contact />
+          <GithubContributions theme={theme} />
+        </main>
 
-      {/* Footer */}
-      <Footer />
+        {/* ── 8. Minimal Hairline Footer ── */}
+        <Footer />
+      </div>
 
-      {/* Persistent Bottom Screen Cat */}
+      {/* ── 9. Idle Easter Egg Cat (Appears after 30s idle time, leaves on move) ── */}
       <BottomScreenCat theme={theme} />
 
-      {/* Full Page Blog Overlay */}
+      {/* ── 10. Full Page Editorial Blog Overlay ── */}
       {activeBlogPost && (
         <BlogPostPage
           post={activeBlogPost}
@@ -298,7 +326,7 @@ export default function App() {
         />
       )}
 
-      {/* Global Command Palette */}
+      {/* ── 11. Global Command Palette ── */}
       <CommandPalette
         isOpen={isCommandPaletteOpen}
         onClose={() => setIsCommandPaletteOpen(false)}

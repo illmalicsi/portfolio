@@ -31,12 +31,12 @@ import {
   SiGit,
 } from 'react-icons/si'
 
+import prismsqlImage from '../assets/prismsql.png'
+import quintessenceImage from '../assets/quintessence.jpg'
 import dbembPicture from '../assets/dbemb-picture.png'
 import synapsyApp from '../assets/synapsy-app.png'
 import caloTrack from '../assets/CaloTrack.png'
 import aslImage from '../assets/asl.png'
-import nasaImage from '../assets/nasa.jpeg'
-import nasa2Image from '../assets/nasa2.jpeg'
 
 export const navLinks = [
   { label: 'Home', href: '#home' },
@@ -56,7 +56,7 @@ export const personalInfo = {
   degree: 'BS Computer Science (4th Year)',
   location: 'Davao City, Philippines',
   timezone: 'Asia/Manila (UTC+8)',
-  email: 'illmalicsi@addu.edu.ph',
+  email: 'ivanlouiemalicsi@gmail.com',
   github: 'https://github.com/illmalicsi',
   linkedin: 'https://linkedin.com/in/illmalicsi',
   yearsBuilding: '5+',
@@ -267,6 +267,48 @@ export const skillsList = [
 ]
 
 export const projects = [
+  {
+    id: 'prismsql',
+    title: 'PrismSQL Studio',
+    shortTitle: 'PrismSQL',
+    category: 'wasm',
+    badge: 'WebAssembly SQLite',
+    featured: true,
+    description:
+      'High-performance in-browser SQL studio powered by WebAssembly SQLite (sql.js). Features full SQLite 3 support (CTEs, Window Functions), live EXPLAIN QUERY PLAN inspector, interactive data grid, query history, and client-side chart visualizations with zero backend setup.',
+    impact: 'Sub-millisecond local query compilation with zero backend latency, executing complete SQL analytical workloads entirely in-browser.',
+    stack: ['React 19', 'TypeScript', 'SQLite WASM', 'Tailwind CSS', 'CodeMirror 6'],
+    architecture: {
+      runtime: 'SQLite 3 compiled to WebAssembly via sql.js with virtual memory catalog',
+      editor: 'CodeMirror 6 with custom SQL syntax highlighting & schema autocompletion',
+      visualizer: 'Client-side chart engine and interactive reactive data grid',
+      inspector: 'Live EXPLAIN QUERY PLAN visualizer for SQL query optimization',
+    },
+    demo: 'https://prismsql.vercel.app',
+    github: 'https://github.com/illmalicsi/PrismSQL',
+    image: prismsqlImage,
+  },
+  {
+    id: 'quintessence',
+    title: 'QUINTESSENCE',
+    shortTitle: 'QUINTESSENCE',
+    category: 'graphics',
+    badge: 'WebGL2 & GLSL Physics',
+    featured: true,
+    description:
+      'Kinetic Fluid & Optical Dispersion Laboratory. Simulates 2D wave partial differential equations on GPU via ping-pong Framebuffer Objects (FBO) and calculates velocity-driven thin-film spectral dispersion in custom GLSL fragment shaders.',
+    impact: 'Real-time 60 FPS GPU-accelerated wave equation integration with zero-CPU audio acoustics and Newton-ring thin-film dispersion.',
+    stack: ['WebGL2', 'Three.js', 'GLSL Shaders', 'TypeScript', 'Web Audio API'],
+    architecture: {
+      simulation: '2D Wave PDE solved discretely on GPU via ping-pong FBOs with 9-point Laplacian stencils',
+      dispersion: 'Custom GLSL fragment shaders calculating velocity-driven thin-film optical path difference (OPD)',
+      acoustics: 'Procedural fluid acoustics synthesized in real-time via Web Audio API without audio assets',
+      engine: 'Three.js WebGL2 pipeline with high-precision Framebuffer floating-point textures',
+    },
+    demo: 'https://quintessence-gl.vercel.app',
+    github: 'https://github.com/illmalicsi/quintessence-gl',
+    image: quintessenceImage,
+  },
   {
     id: 'dbemb',
     title: 'Davao Blue Eagles Marching Band Hub',
@@ -480,8 +522,8 @@ export const hackathonPhases = [
 export const contactLinks = [
   {
     label: 'Email',
-    value: 'illmalicsi@addu.edu.ph',
-    href: 'https://mail.google.com/mail/?view=cm&fs=1&to=illmalicsi@addu.edu.ph&su=Portfolio%20Inquiry&body=Hi%20Ivan%2C%0A%0AI%20saw%20your%20portfolio%20and%20would%20love%20to%20connect%20about%20a%20project.%0A%0ABest%20regards%2C%0A',
+    value: 'ivanlouiemalicsi@gmail.com',
+    href: 'https://mail.google.com/mail/?view=cm&fs=1&to=ivanlouiemalicsi@gmail.com&su=Portfolio%20Inquiry&body=Hi%20Ivan%2C%0A%0AI%20saw%20your%20portfolio%20and%20would%20love%20to%20connect%20about%20a%20project.%0A%0ABest%20regards%2C%0A',
     icon: FiMail,
     accent: '#06B6D4',
   },

@@ -1,120 +1,74 @@
-import React, { useEffect, useRef } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { motion as Motion } from 'framer-motion'
 import { FiArrowRight } from 'react-icons/fi'
 import { soundFx } from '../../utils/sound'
-import { prefersReducedMotion } from '../../config/animation'
 import { singleHackathonBlog } from '../../data/hackathonBlogData'
-
-gsap.registerPlugin(ScrollTrigger)
 
 interface HackathonJourneyProps {
   onOpenPost: (postId: string) => void
 }
 
 export default function HackathonJourney({ onOpenPost }: HackathonJourneyProps) {
-  const sectionRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (prefersReducedMotion()) return
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.blog-header-row',
-        { opacity: 0, y: 15 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: {
-            trigger: '.blog-header-row',
-            start: 'top 92%',
-            once: true,
-          },
-        }
-      )
-
-      gsap.fromTo(
-        '.blog-post-row',
-        { opacity: 0, y: 18 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: {
-            trigger: '.blog-post-row',
-            start: 'top 90%',
-            once: true,
-          },
-        }
-      )
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   const handlePostClick = () => {
     soundFx.playClick()
     onOpenPost(singleHackathonBlog.id)
   }
 
   return (
-    <section ref={sectionRef} id="hackathon" className="relative px-4 py-24 sm:px-6 md:py-32 lg:px-8">
-      <div className="mx-auto w-full max-w-4xl">
-        
-        {/* ── Top Header Row (Matching 01 — blog / ALL POSTS → from reference) ── */}
-        <div className="blog-header-row flex items-center justify-between pb-4">
-          <div className="font-mono text-xs sm:text-sm text-zinc-500 tracking-wider">
-            04 — blog
+    <section
+      id="hackathon"
+      className="relative px-4 py-24 sm:px-8 md:py-32 lg:px-12 border-t border-hairline max-w-7xl mx-auto w-full select-none"
+    >
+      <div className="w-full">
+        {/* ── Section Header Row ── */}
+        <div className="flex items-center justify-between pb-6 mb-6 border-b border-hairline">
+          <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[var(--text-muted)]">
+            <span>04 / CHRONICLE</span>
+            <span className="h-1 w-1 rounded-full bg-[var(--vermilion)]" />
+            <span>DISPATCH &amp; SPRINT</span>
           </div>
 
           <button
             type="button"
             onClick={handlePostClick}
-            className="group flex items-center gap-1.5 font-mono text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
+            className="group flex items-center gap-2 font-mono text-xs text-[var(--text-muted)] hover:text-[var(--vermilion)] transition-colors cursor-pointer"
           >
-            <span>READ STORY</span>
+            <span>READ ESSAY</span>
             <span className="transition-transform group-hover:translate-x-1">→</span>
           </button>
         </div>
 
-        {/* ── Single Hackathon Blog Minimalist Row ── */}
-        <div className="blog-post-list border-t border-black/[0.08] dark:border-white/[0.08]">
-          <article
-            onClick={handlePostClick}
-            onMouseEnter={() => soundFx.playHover()}
-            className="blog-post-row group relative border-b border-black/[0.08] dark:border-white/[0.08] py-5 sm:py-6 cursor-pointer transition-colors hover:bg-black/[0.015] dark:hover:bg-white/[0.02] px-1 sm:px-2 rounded-lg"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 sm:gap-6">
-              
-              {/* Left: Article Title */}
-              <h3 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors leading-snug">
-                {singleHackathonBlog.title}
-              </h3>
+        {/* ── Single Editorial Row with Shared layoutId ── */}
+        <article
+          onClick={handlePostClick}
+          onMouseEnter={() => soundFx.playHover()}
+          data-cursor="pointer"
+          className="group relative p-6 sm:p-8 rounded-xl hover:rounded-2xl border border-transparent hover:border-hairline bg-transparent hover:bg-[var(--text)]/[0.015] cursor-pointer transition-all duration-300"
+        >
+          <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-4 sm:gap-8">
+            {/* Title with Shared layoutId for Cinematic Transition */}
+            <Motion.h3
+              layoutId="hackathon-story-title"
+              className="font-display text-base sm:text-lg md:text-[1.25rem] font-light text-[var(--text)] group-hover:text-[var(--vermilion)] transition-colors max-w-2xl leading-[1.25] tracking-tight"
+            >
+              {singleHackathonBlog.title}
+            </Motion.h3>
 
-              {/* Right: Date & Arrow */}
-              <div className="flex items-center gap-2 self-start sm:self-auto flex-shrink-0">
-                <span className="font-mono text-xs sm:text-sm text-zinc-500 dark:text-zinc-500">
-                  {singleHackathonBlog.displayDate}
-                </span>
-                <FiArrowRight
-                  size={13}
-                  className="opacity-0 -translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0 text-zinc-400 dark:text-zinc-300 hidden sm:inline"
-                />
-              </div>
+            {/* Date & Indicator */}
+            <div className="flex items-center gap-4 self-start md:self-auto shrink-0 pt-1 md:pt-0">
+              <span className="font-mono text-xs text-[var(--text-muted)]">
+                {singleHackathonBlog.displayDate} · {singleHackathonBlog.readTime}
+              </span>
+              <span className="flex h-7 w-7 items-center justify-center border border-hairline text-[var(--text-muted)] group-hover:border-[var(--vermilion)] group-hover:text-[var(--vermilion)] transition-colors">
+                <FiArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+              </span>
             </div>
+          </div>
 
-            {/* Excerpt line */}
-            <p className="mt-1.5 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 line-clamp-1 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors">
-              {singleHackathonBlog.excerpt}
-            </p>
-          </article>
-        </div>
-
+          {/* Excerpt (compact text after heading) */}
+          <p className="mt-3 text-xs sm:text-sm text-[var(--text-muted)] font-body line-clamp-2 max-w-[58ch] leading-relaxed">
+            {singleHackathonBlog.excerpt}
+          </p>
+        </article>
       </div>
     </section>
   )

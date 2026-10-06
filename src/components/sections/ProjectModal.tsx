@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion as Motion, AnimatePresence } from 'framer-motion'
 import { FiArrowUpRight, FiCpu, FiGithub, FiX } from 'react-icons/fi'
 import { soundFx } from '../../utils/sound'
+import { PRIMARY_EASE_CURVE, SHARED_SPRING } from '../../config/motion'
 import type { ProjectData } from '../ui/ProjectCard'
 
 interface ProjectModalProps {
@@ -58,40 +59,36 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           data-lenis-prevent
           className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-8 overflow-hidden"
         >
-          {/* Full Screen Blurred Backdrop strictly above Navbar (z-50) */}
+          {/* Backdrop */}
           <Motion.div
             key="modal-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: PRIMARY_EASE_CURVE }}
             onClick={() => {
               soundFx.playClick()
               onClose()
             }}
-            className="fixed inset-0 bg-black/60 dark:bg-black/85 backdrop-blur-md dark:backdrop-blur-xl z-[100]"
+            className="fixed inset-0 bg-black/60 dark:bg-black/85 backdrop-blur-md z-[100]"
           />
 
-          {/* Modal Window with silky spring pop-in & smooth exit */}
+          {/* Modal Container with Shared-Element layoutId */}
           <Motion.div
-            key="modal-window"
+            key={`modal-window-${project.id}`}
+            layoutId={`project-preview-${project.id}`}
             data-lenis-prevent
             onWheel={(e: React.WheelEvent) => e.stopPropagation()}
-            initial={{ opacity: 0, scale: 0.93, y: 24 }}
+            initial={{ opacity: 0, scale: 0.94, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 16 }}
-            transition={{
-              type: 'spring',
-              damping: 28,
-              stiffness: 350,
-              mass: 0.7,
-            }}
-            className="relative my-auto max-h-[88vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-black/[0.1] dark:border-white/[0.14] bg-white dark:bg-[#0c0c0e] shadow-[0_30px_80px_rgba(0,0,0,0.18)] dark:shadow-[0_30px_90px_rgba(0,0,0,0.95)] flex flex-col z-[101]"
+            exit={{ opacity: 0, scale: 0.94, y: 16 }}
+            transition={SHARED_SPRING}
+            className="relative my-auto max-h-[88vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-hairline bg-white dark:bg-[#0c0c0e] shadow-2xl flex flex-col z-[101]"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-black/[0.08] dark:border-white/[0.08] px-6 py-4 bg-zinc-50 dark:bg-zinc-900/60 backdrop-blur-md flex-shrink-0">
-              <span className="font-mono text-xs text-zinc-600 dark:text-zinc-400 font-medium tracking-wider">
-                ARCHITECTURE_SPEC // {project.id.toUpperCase()}
+            <div className="flex items-center justify-between border-b border-hairline px-6 py-4 bg-zinc-50/50 dark:bg-white/[0.02] flex-shrink-0">
+              <span className="font-mono text-xs text-zinc-500 font-medium tracking-wider">
+                SPEC // {project.id.toUpperCase()}
               </span>
 
               <button
@@ -100,10 +97,10 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   soundFx.playClick()
                   onClose()
                 }}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-black/[0.1] dark:border-white/[0.1] bg-black/[0.04] dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 transition hover:border-black/30 dark:hover:border-white/30 hover:text-zinc-900 dark:hover:text-white cursor-pointer"
+                className="flex h-7 w-7 items-center justify-center rounded-full border border-hairline text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
                 aria-label="Close modal"
               >
-                <FiX size={15} />
+                <FiX size={14} />
               </button>
             </div>
 
@@ -114,19 +111,19 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
               className="overflow-y-auto p-6 md:p-8 space-y-6 overscroll-contain flex-1 min-h-0"
             >
               {/* Visual Banner */}
-              <div className="relative aspect-[16/8] w-full overflow-hidden rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-zinc-100 dark:bg-zinc-900">
+              <div className="relative aspect-[16/8] w-full overflow-hidden rounded-xl border border-hairline bg-zinc-950">
                 <img
                   src={project.image}
                   alt={project.title}
                   className="h-full w-full object-cover object-top"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-transparent to-transparent dark:from-[#0c0c0e]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
                   <div>
-                    <span className="inline-block rounded-full border border-black/[0.1] dark:border-white/[0.15] bg-white/80 dark:bg-black/60 px-2.5 py-0.5 font-mono text-[10px] text-zinc-800 dark:text-zinc-300 backdrop-blur-md">
+                    <span className="inline-block rounded-full border border-white/20 bg-black/60 px-2.5 py-0.5 font-mono text-[10px] text-zinc-300 backdrop-blur-md">
                       {project.badge}
                     </span>
-                    <h3 className="mt-1 text-xl sm:text-2xl font-bold text-zinc-900 dark:text-white">
+                    <h3 className="mt-1 text-xl sm:text-2xl font-display font-medium text-white">
                       {project.title}
                     </h3>
                   </div>
@@ -147,25 +144,25 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
 
               {/* Overview & Impact */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="md:col-span-2 space-y-3">
-                  <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">Project Overview</h4>
+                <div className="md:col-span-2 space-y-3 font-body">
+                  <h4 className="text-sm font-display font-semibold text-zinc-900 dark:text-white">Project Overview</h4>
                   <p className="text-xs sm:text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                     {project.description}
                   </p>
-                  <div className="rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-black/[0.02] dark:bg-white/[0.02] p-3.5 text-xs">
+                  <div className="rounded-xl border border-hairline p-3.5 text-xs">
                     <span className="font-mono text-zinc-500 uppercase block mb-1">Target Impact:</span>
                     <p className="text-zinc-800 dark:text-zinc-200 font-medium leading-relaxed">{project.impact}</p>
                   </div>
                 </div>
 
                 {/* Sidebar Tech Stack */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-semibold text-zinc-900 dark:text-white">Tech Stack</h4>
+                <div className="space-y-3 font-body">
+                  <h4 className="text-sm font-display font-semibold text-zinc-900 dark:text-white">Tech Stack</h4>
                   <div className="flex flex-wrap gap-1.5">
                     {project.stack.map((tech) => (
                       <span
                         key={tech}
-                        className="rounded-md border border-black/[0.08] dark:border-white/[0.08] bg-black/[0.03] dark:bg-white/[0.03] px-2 py-0.5 font-mono text-[11px] text-zinc-700 dark:text-zinc-300"
+                        className="rounded-md border border-hairline bg-black/[0.02] dark:bg-white/[0.02] px-2 py-0.5 font-mono text-[11px] text-zinc-600 dark:text-zinc-300"
                       >
                         {tech}
                       </span>
@@ -179,7 +176,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                         target="_blank"
                         rel="noreferrer"
                         onClick={() => soundFx.playClick()}
-                        className="inline-flex items-center gap-1.5 font-mono text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                        className="inline-flex items-center gap-1.5 font-mono text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors"
                       >
                         <FiGithub size={13} /> View on GitHub
                       </a>
@@ -190,21 +187,21 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
 
               {/* Architecture Blueprint Breakdown */}
               {project.architecture && (
-                <div className="rounded-xl border border-black/[0.08] dark:border-white/[0.08] bg-zinc-50/70 dark:bg-zinc-900/40 p-5 space-y-3">
+                <div className="rounded-xl border border-hairline p-5 space-y-3">
                   <div className="flex items-center gap-2">
                     <FiCpu className="text-zinc-900 dark:text-white" size={15} />
-                    <h4 className="text-xs font-semibold text-zinc-900 dark:text-white font-mono uppercase tracking-wider">
+                    <h4 className="text-xs font-mono font-semibold text-zinc-900 dark:text-white uppercase tracking-wider">
                       Engineering Architecture
                     </h4>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     {Object.entries(project.architecture).map(([key, val]) => (
-                      <div key={key} className="rounded-lg border border-black/[0.06] dark:border-white/[0.06] bg-white dark:bg-black/40 p-3">
-                        <p className="font-mono text-[10px] uppercase text-zinc-700 dark:text-zinc-400 font-semibold">
+                      <div key={key} className="rounded-lg border border-hairline p-3">
+                        <p className="font-mono text-[10px] uppercase text-zinc-500 font-semibold">
                           {key.replace('_', ' ')}
                         </p>
-                        <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed font-body">
                           {val}
                         </p>
                       </div>
@@ -215,7 +212,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
 
             {/* Modal Footer */}
-            <div className="flex items-center justify-between border-t border-black/[0.08] dark:border-white/[0.08] px-6 py-3 bg-zinc-50 dark:bg-zinc-900/30 text-xs font-mono text-zinc-500">
+            <div className="flex items-center justify-between border-t border-hairline px-6 py-3 bg-zinc-50/50 dark:bg-white/[0.02] text-xs font-mono text-zinc-500">
               <span>Press Esc to close</span>
               {project.demo && (
                 <a

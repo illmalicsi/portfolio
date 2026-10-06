@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion as Motion, AnimatePresence } from 'framer-motion'
 import { FiMenu, FiMoon, FiSun, FiX, FiSearch } from 'react-icons/fi'
-import { navLinks } from '../../data/portfolioData'
+import { SHARED_SPRING, PRIMARY_EASE_CURVE } from '../../config/motion'
 import { soundFx } from '../../utils/sound'
 import logoImg from '../../assets/logo.jpg'
 
@@ -14,195 +14,354 @@ interface NavbarProps {
   onOpenCommandPalette?: () => void
 }
 
+interface IndexItem {
+  number: string
+  label: string
+  id: string
+  href: string
+}
+
+const INDEX_ITEMS: IndexItem[] = [
+  { number: '01', label: 'HOME', id: 'home', href: '#home' },
+  { number: '02', label: 'ABOUT', id: 'about', href: '#about' },
+  { number: '03', label: 'WORK', id: 'projects', href: '#projects' },
+  { number: '04', label: 'CAREER', id: 'experience', href: '#experience' },
+  { number: '05', label: 'CONTACT', id: 'contact', href: '#contact' },
+]
+
+const ALL_MOBILE_ITEMS = [
+  { number: '01', label: 'HOME', href: '#home' },
+  { number: '02', label: 'ABOUT', href: '#about' },
+  { number: '03', label: 'PROJECTS', href: '#projects' },
+  { number: '04', label: 'HACKATHONS', href: '#hackathon' },
+  { number: '05', label: 'EXPERIENCE', href: '#experience' },
+  { number: '06', label: 'CONTRIBUTIONS', href: '#contributions' },
+  { number: '07', label: 'CONTACT', href: '#contact' },
+]
+
 export default function Navbar({
   activeSection,
   theme,
   toggleTheme,
   onOpenCommandPalette,
 }: NavbarProps) {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  const handleLinkClick = () => {
-    soundFx.playClick()
-    setMenuOpen(false)
-  }
-
-  // Prevent background scrolling when mobile menu is open
+  // Prevent background scrolling when mobile menu overlay is active
   useEffect(() => {
-    if (menuOpen) {
+    if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden'
+      const lenis = (window as unknown as { __lenis?: { stop: () => void } }).__lenis
+      if (lenis?.stop) lenis.stop()
     } else {
       document.body.style.overflow = ''
+      const lenis = (window as unknown as { __lenis?: { start: () => void } }).__lenis
+      if (lenis?.start) lenis.start()
     }
     return () => {
       document.body.style.overflow = ''
     }
-  }, [menuOpen])
+  }, [mobileMenuOpen])
+
+  const handleLinkClick = () => {
+    soundFx.playClick()
+    setMobileMenuOpen(false)
+  }
+
+  // Circular clip-path theme toggle using View Transitions API
+  const handleToggleTheme = (event: React.MouseEvent<HTMLButtonElement>) => {
+    soundFx.playToggle()
+    const isTransitionSupported =
+      typeof document.startViewTransition === 'function' &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (!isTransitionSupported) {
+      toggleTheme()
+      return
+    }
+
+    const x = event.clientX
+    const y = event.clientY
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    )
+
+    const transition = document.startViewTransition(() => {
+      toggleTheme()
+    })
+
+    transition.ready.then(() => {
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 480,
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      )
+    })
+  }
+
+  // Map activeSection (e.g. 'hackathon' maps visually to 03 WORK, 'contributions' to 04 CAREER)
+  const getMappedActiveId = (id: string) => {
+    if (id === 'hackathon') return 'projects'
+    if (id === 'contributions') return 'experience'
+    return id
+  }
+
+  const mappedActiveId = getMappedActiveId(activeSection)
 
   return (
     <>
-      {/* Dark backdrop overlay when mobile menu is open */}
+      {/* ── 1. Desktop Fixed Left Rail (w-18 = 72px) ───────────────────────── */}
+      <aside
+        aria-label="Sidebar Navigation"
+        className="hidden md:flex fixed left-0 top-0 bottom-0 w-[72px] z-50 flex-col justify-between items-center py-7 border-r border-hairline bg-[var(--bg)]/90 backdrop-blur-md select-none transition-colors duration-200"
+      >
+        {/* Monogram Logo */}
+        <a
+          href="#home"
+          onClick={handleLinkClick}
+          className="group flex flex-col items-center gap-1.5 transition-opacity hover:opacity-80"
+          aria-label="Ivan Louie Malicsi Home"
+        >
+          <div className="relative h-8 w-8 overflow-hidden rounded border border-hairline transition-all group-hover:border-[var(--vermilion)]">
+            <img
+              src={logoImg}
+              alt="Ivan Louie Logo"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <span className="font-mono text-[10px] tracking-widest text-[var(--text-muted)] group-hover:text-[var(--text)]">
+            ILM
+          </span>
+        </a>
+
+        {/* Vertical Section Index 01 to 05 */}
+        <nav aria-label="Section Index" className="my-auto py-4">
+          <ul className="flex flex-col items-center gap-5">
+            {INDEX_ITEMS.map((item) => {
+              const isActive = mappedActiveId === item.id
+
+              return (
+                <li key={item.number} className="relative flex items-center justify-center">
+                  <a
+                    href={item.href}
+                    onClick={handleLinkClick}
+                    onMouseEnter={() => soundFx.playHover()}
+                    className="group relative flex flex-col items-center px-2 py-1 text-center"
+                    aria-label={`${item.number} ${item.label}`}
+                    title={`${item.number} ${item.label}`}
+                  >
+                    {/* Small vermilion dot indicator sliding between active entries */}
+                    <div className="relative flex h-3 w-3 items-center justify-center mb-1">
+                      {isActive && (
+                        <Motion.span
+                          layoutId="rail-vermilion-dot"
+                          className="h-1.5 w-1.5 rounded-full bg-[var(--vermilion)]"
+                          transition={SHARED_SPRING}
+                        />
+                      )}
+                    </div>
+
+                    {/* Number in JetBrains Mono */}
+                    <span
+                      className={`font-mono text-[11px] tracking-wider transition-colors duration-200 ${
+                        isActive
+                          ? 'text-[var(--text)] font-semibold'
+                          : 'text-[var(--text-muted)] group-hover:text-[var(--text)]'
+                      }`}
+                    >
+                      {item.number}
+                    </span>
+
+                    {/* Tiny vertical label */}
+                    <span
+                      className={`text-[8px] font-mono tracking-widest uppercase transition-colors duration-200 ${
+                        isActive
+                          ? 'text-[var(--vermilion)] font-medium'
+                          : 'text-transparent group-hover:text-[var(--text-muted)]'
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
+
+        {/* Rail Footer Controls: Command Palette & Theme Toggle */}
+        <div className="flex flex-col items-center gap-3">
+          {onOpenCommandPalette && (
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick()
+                onOpenCommandPalette()
+              }}
+              className="flex h-7 w-7 items-center justify-center border border-hairline text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--text)] transition-colors cursor-pointer"
+              title="Search (⌘K)"
+              aria-label="Open command palette (⌘K)"
+            >
+              <FiSearch size={12} />
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={handleToggleTheme}
+            className="flex h-7 w-7 items-center justify-center border border-hairline text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--text)] transition-colors cursor-pointer"
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode (T)`}
+            aria-label="Toggle light or dark theme"
+          >
+            {theme === 'dark' ? <FiSun size={12} /> : <FiMoon size={12} />}
+          </button>
+        </div>
+      </aside>
+
+      {/* ── 2. Mobile Minimal Top Bar (h-14) ───────────────────────────────── */}
+      <header className="md:hidden fixed top-0 inset-x-0 h-14 z-50 flex items-center justify-between px-5 border-b border-hairline bg-[var(--bg)]/90 backdrop-blur-md select-none">
+        <a
+          href="#home"
+          onClick={handleLinkClick}
+          className="flex items-center gap-2.5"
+          aria-label="Ivan Louie Malicsi Home"
+        >
+          <div className="relative h-7 w-7 overflow-hidden rounded border border-hairline">
+            <img
+              src={logoImg}
+              alt="Ivan Louie Logo"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <span className="font-mono text-xs font-medium tracking-tight text-[var(--text)]">
+            IVAN LOUIE MALICSI
+          </span>
+        </a>
+
+        <div className="flex items-center gap-2">
+          {onOpenCommandPalette && (
+            <button
+              type="button"
+              onClick={() => {
+                soundFx.playClick()
+                onOpenCommandPalette()
+              }}
+              className="flex h-8 w-8 items-center justify-center border border-hairline text-[var(--text-muted)] hover:text-[var(--text)] transition-colors cursor-pointer"
+              aria-label="Search"
+            >
+              <FiSearch size={13} />
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={handleToggleTheme}
+            className="flex h-8 w-8 items-center justify-center border border-hairline text-[var(--text-muted)] hover:text-[var(--text)] transition-colors cursor-pointer"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <FiSun size={13} /> : <FiMoon size={13} />}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              soundFx.playClick()
+              setMobileMenuOpen(true)
+            }}
+            className="flex h-8 w-8 items-center justify-center border border-hairline text-[var(--text-muted)] hover:text-[var(--text)] transition-colors cursor-pointer"
+            aria-label="Open index menu"
+          >
+            <FiMenu size={14} />
+          </button>
+        </div>
+      </header>
+
+      {/* ── 3. Mobile Full-Screen Index Overlay ───────────────────────────── */}
       <AnimatePresence>
-        {menuOpen && (
+        {mobileMenuOpen && (
           <Motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setMenuOpen(false)}
-            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden pointer-events-auto"
-            aria-hidden="true"
-          />
-        )}
-      </AnimatePresence>
-
-      <header className="fixed inset-x-0 top-0 z-50 mx-auto w-full px-4 pt-4 sm:px-6 sm:pt-5 pointer-events-none">
-        <nav
-          className={`mx-auto w-full max-w-4xl border transition-all duration-300 pointer-events-auto sm:px-4 ${
-            menuOpen
-              ? 'rounded-3xl border-black/15 bg-white/98 dark:border-white/15 dark:bg-[#0c0c0e]/98 px-4 py-3.5 shadow-2xl backdrop-blur-2xl'
-              : 'rounded-full border-black/[0.08] bg-white/80 dark:border-white/[0.08] dark:bg-black/60 px-3 py-2 shadow-lg dark:shadow-2xl backdrop-blur-xl'
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            
-            {/* Logo Monogram */}
-            <a
-              href="#home"
-              onClick={handleLinkClick}
-              className="group flex items-center gap-2.5 pl-2 text-sm font-semibold tracking-tight text-zinc-900 dark:text-white transition-opacity hover:opacity-80"
-              aria-label="Ivan Louie Malicsi Home"
-            >
-              <div className="relative h-8 w-8 overflow-hidden rounded-lg border border-black/10 dark:border-white/20 bg-zinc-100 dark:bg-black transition-transform group-hover:scale-105 shadow-sm">
-                <img
-                  src={logoImg}
-                  alt="Ivan Louie Logo"
-                  className="h-full w-full object-cover"
-                />
+            transition={{ duration: 0.25, ease: PRIMARY_EASE_CURVE }}
+            className="fixed inset-0 z-[100] flex flex-col justify-between bg-[var(--bg)] p-6 sm:p-8 select-none"
+          >
+            {/* Top Bar inside overlay */}
+            <div className="flex items-center justify-between border-b border-hairline pb-4">
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[var(--vermilion)]" />
+                <span className="font-mono text-xs uppercase tracking-widest text-[var(--text)]">
+                  TABLE OF CONTENTS
+                </span>
               </div>
-              <span className="hidden font-mono text-xs font-medium text-zinc-600 dark:text-zinc-300 sm:inline-block">
-                malicsi.dev
-              </span>
-            </a>
-
-            {/* Desktop Nav Links */}
-            <ul className="hidden items-center gap-1 md:flex">
-              {navLinks.map((link) => {
-                const targetId = link.href.replace('#', '')
-                const isActive = activeSection === targetId
-
-                return (
-                  <li key={link.href}>
-                    <a
-                      href={link.href}
-                      onClick={handleLinkClick}
-                      onMouseEnter={() => soundFx.playHover()}
-                      className={`relative px-3.5 py-1.5 font-mono text-xs transition-colors rounded-full ${
-                        isActive
-                          ? 'text-zinc-900 dark:text-white font-semibold'
-                          : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
-                      }`}
-                    >
-                      {link.label}
-                      {isActive && (
-                        <Motion.span
-                          layoutId="nav-pill"
-                          className="absolute inset-0 -z-10 rounded-full bg-black/[0.06] border border-black/[0.06] dark:bg-white/[0.09] dark:border-white/[0.08]"
-                          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                        />
-                      )}
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-
-            {/* Action Utilities (⌘K shortcut, Theme Toggle, Mobile Menu) */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              {/* Command Palette Trigger */}
-              {onOpenCommandPalette && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    soundFx.playClick()
-                    onOpenCommandPalette()
-                  }}
-                  className="flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-black/[0.03] text-zinc-600 hover:border-black/20 hover:text-zinc-900 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-zinc-400 dark:hover:border-white/20 dark:hover:text-white px-2.5 py-1 text-xs font-mono transition-colors cursor-pointer"
-                  title="Search and shortcuts (⌘K)"
-                  aria-label="Open command palette (⌘K)"
-                >
-                  <FiSearch size={12} />
-                  <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium">⌘K</span>
-                </button>
-              )}
-
-              {/* Theme Toggle */}
-              <button
-                type="button"
-                onClick={() => {
-                  soundFx.playToggle()
-                  toggleTheme()
-                }}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/[0.08] bg-black/[0.03] text-zinc-600 hover:border-black/20 hover:text-zinc-900 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-zinc-400 dark:hover:border-white/20 dark:hover:text-white transition-colors cursor-pointer"
-                title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode (T)`}
-                aria-label="Toggle theme"
-              >
-                {theme === 'dark' ? <FiSun size={13} /> : <FiMoon size={13} />}
-              </button>
-
-              {/* Mobile Hamburger Toggle */}
               <button
                 type="button"
                 onClick={() => {
                   soundFx.playClick()
-                  setMenuOpen((prev) => !prev)
+                  setMobileMenuOpen(false)
                 }}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-black/[0.08] bg-black/[0.03] text-zinc-600 hover:text-zinc-900 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-zinc-400 dark:hover:text-white md:hidden cursor-pointer"
-                aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+                className="flex h-9 w-9 items-center justify-center border border-hairline text-[var(--text)] hover:border-[var(--vermilion)] transition-colors cursor-pointer"
+                aria-label="Close index menu"
               >
-                {menuOpen ? <FiX size={15} /> : <FiMenu size={15} />}
+                <FiX size={16} />
               </button>
             </div>
-          </div>
 
-          {/* Mobile Dropdown Menu */}
-          <AnimatePresence>
-            {menuOpen && (
-              <Motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                className="overflow-hidden md:hidden border-t border-black/[0.08] dark:border-white/[0.08] mt-3.5 pt-3 pb-1"
-              >
-                <ul className="flex flex-col gap-1.5 px-1">
-                  {navLinks.map((link) => {
-                    const targetId = link.href.replace('#', '')
-                    const isActive = activeSection === targetId
+            {/* Middle: Editorial Numbered Index */}
+            <nav className="my-auto py-6">
+              <ul className="flex flex-col gap-4">
+                {ALL_MOBILE_ITEMS.map((item, index) => {
+                  return (
+                    <Motion.li
+                      key={item.number}
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{
+                        duration: 0.35,
+                        delay: 0.05 + index * 0.04,
+                        ease: PRIMARY_EASE_CURVE,
+                      }}
+                    >
+                      <a
+                        href={item.href}
+                        onClick={handleLinkClick}
+                        className="group flex items-baseline justify-between border-b border-hairline/60 pb-3"
+                      >
+                        <div className="flex items-baseline gap-4">
+                          <span className="font-mono text-xs text-[var(--text-muted)] group-hover:text-[var(--vermilion)] transition-colors">
+                            {item.number}
+                          </span>
+                          <span className="font-sans text-xl sm:text-2xl font-normal tracking-tight text-[var(--text)] group-hover:translate-x-1 transition-transform">
+                            {item.label}
+                          </span>
+                        </div>
+                        <span className="font-mono text-xs text-[var(--text-muted)] group-hover:text-[var(--vermilion)] transition-colors">
+                          ↗
+                        </span>
+                      </a>
+                    </Motion.li>
+                  )
+                })}
+              </ul>
+            </nav>
 
-                    return (
-                      <li key={link.href}>
-                        <a
-                          href={link.href}
-                          onClick={handleLinkClick}
-                          className={`flex items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-mono transition-colors ${
-                            isActive
-                              ? 'bg-zinc-900 text-white font-semibold dark:bg-white dark:text-black shadow-sm'
-                              : 'text-zinc-600 hover:bg-black/[0.04] hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.06] dark:hover:text-white'
-                          }`}
-                        >
-                          <span>{link.label}</span>
-                          {isActive && <span className="h-1.5 w-1.5 rounded-full bg-current" />}
-                        </a>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </Motion.div>
-            )}
-          </AnimatePresence>
-        </nav>
-      </header>
+            {/* Bottom Meta info */}
+            <div className="border-t border-hairline pt-4 flex items-center justify-between font-mono text-[11px] text-[var(--text-muted)]">
+              <span>IVAN LOUIE MALICSI</span>
+              <span>DAVAO CITY, PH</span>
+            </div>
+          </Motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }

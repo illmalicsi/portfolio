@@ -238,11 +238,11 @@ export default function CommandPalette({
             initial={{ opacity: 0, scale: 0.96, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -10 }}
-            transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-black/[0.1] dark:border-white/[0.12] bg-white dark:bg-[#0c0c0e] shadow-2xl"
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-hairline bg-white dark:bg-[#0c0c0e] shadow-2xl"
           >
             {/* Search Input Bar */}
-            <div className="flex items-center gap-3 border-b border-black/[0.08] dark:border-white/[0.08] px-4 py-3.5">
+            <div className="flex items-center gap-3 border-b border-hairline px-4 py-3.5">
               <FiSearch className="text-zinc-400 dark:text-zinc-500" size={17} />
               <input
                 ref={inputRef}
@@ -310,7 +310,7 @@ export default function CommandPalette({
             </div>
 
             {/* Footer Hints */}
-            <div className="flex items-center justify-between border-t border-black/[0.08] dark:border-white/[0.08] px-4 py-2 text-[11px] font-mono text-zinc-400 dark:text-zinc-500">
+            <div className="flex items-center justify-between border-t border-hairline px-4 py-2 text-[11px] font-mono text-zinc-400 dark:text-zinc-500">
               <div className="flex items-center gap-3">
                 <span>↑↓ Navigate</span>
                 <span>↵ Select</span>

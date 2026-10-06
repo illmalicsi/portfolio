@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react'
+import React, { useState, useMemo, useRef, useEffect } from 'react'
+import { FiGithub, FiExternalLink } from 'react-icons/fi'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { FiGithub, FiExternalLink } from 'react-icons/fi'
 import { soundFx } from '../../utils/sound'
-import { prefersReducedMotion } from '../../config/animation'
+import { prefersReducedMotion } from '../../config/motion'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -21,7 +21,7 @@ const GITHUB_USERNAME = 'illmalicsi'
 const GITHUB_URL = `https://github.com/${GITHUB_USERNAME}`
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-// 100% verified contribution records matching authenticated GitHub profile (public + private repos)
+// Verified contribution records matching authenticated GitHub profile (public + private repos)
 const CONTRIBUTIONS_MAP: Record<string, [number, 0 | 1 | 2 | 3 | 4]> = {
   // ── 2026 (Exactly 366 contributions matching Ivan's authenticated GitHub profile) ──
   '2026-02-06': [14, 4],
@@ -173,14 +173,15 @@ const CONTRIBUTIONS_MAP: Record<string, [number, 0 | 1 | 2 | 3 | 4]> = {
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
-export default function GithubContributions({ theme = 'dark' }: GithubContributionsProps) {
-  // Default to 2026 (or users can switch to 2025, 2024, 2023)
+export default function GithubContributions({ theme = 'light' }: GithubContributionsProps) {
   const [selectedYear, setSelectedYear] = useState<number>(2026)
   const [hoveredDay, setHoveredDay] = useState<ContributionDay | null>(null)
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null)
   const sectionRef = useRef<HTMLDivElement>(null)
+  const gridContainerRef = useRef<HTMLDivElement>(null)
 
   const years = [2026, 2025, 2024, 2023]
+  const isLight = theme === 'light'
 
   // Calculate year totals
   const yearTotals = useMemo(() => {
@@ -194,7 +195,7 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
     return totals
   }, [])
 
-  // Build the 53-week calendar grid for the selected year (Sun to Sat rows)
+  // Build the 53-week calendar grid
   const { weeks, monthLabels } = useMemo(() => {
     const yr = selectedYear
     const startDate = new Date(yr, 0, 1)
@@ -205,13 +206,11 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
     const months: { label: string; weekIndex: number }[] = []
     let lastMonth = -1
 
-    // Pad beginning of week 0 with null if Jan 1 is not Sunday
     const startDayOfWeek = startDate.getDay()
     for (let i = 0; i < startDayOfWeek; i++) {
       currentWeek.push(null)
     }
 
-    // Iterate through all days of the year
     for (let d = new Date(yr, 0, 1); d <= endDate; d.setDate(d.getDate() + 1)) {
       const m = d.getMonth()
       const dateStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
@@ -240,7 +239,6 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
       }
     }
 
-    // Pad trailing week with null if Dec 31 is not Saturday
     if (currentWeek.length > 0) {
       while (currentWeek.length < 7) {
         currentWeek.push(null)
@@ -251,63 +249,59 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
     return { weeks: gridWeeks, monthLabels: months }
   }, [selectedYear])
 
-  // GSAP ScrollTrigger Entrance
+  // Diagonal staggered entrance animation when scrolled into view
   useEffect(() => {
-    if (prefersReducedMotion()) return
+    if (prefersReducedMotion() || !gridContainerRef.current) return
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.gh-heading-row',
-        { opacity: 0, y: 15 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 88%',
-            once: true,
-          },
-        }
-      )
+    const cells = gridContainerRef.current.querySelectorAll<HTMLElement>('.contrib-cell')
+    if (!cells.length) return
 
-      gsap.fromTo(
-        '.gh-calendar-container',
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: 'power3.out',
-          clearProps: 'all',
-          scrollTrigger: {
-            trigger: '.gh-calendar-container',
-            start: 'top 90%',
-            once: true,
-          },
-        }
-      )
-    }, sectionRef)
+    gsap.fromTo(
+      cells,
+      { opacity: 0, scale: 0.3 },
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 0.35,
+        ease: 'power2.out',
+        stagger: {
+          grid: [7, weeks.length],
+          from: 'start',
+          amount: 0.65,
+        },
+        scrollTrigger: {
+          trigger: gridContainerRef.current,
+          start: 'top 85%',
+          once: true,
+        },
+      }
+    )
+  }, [weeks.length, selectedYear])
 
-    return () => ctx.revert()
-  }, [])
-
-  // Exact GitHub dark & light mode contribution cell colors
-  const getCellColor = (level: number) => {
-    switch (level) {
-      case 1:
-        return 'bg-[#0e4429] dark:bg-[#0e4429] border-[#0e4429]'
-      case 2:
-        return 'bg-[#006d32] dark:bg-[#006d32] border-[#006d32]'
-      case 3:
-        return 'bg-[#26a641] dark:bg-[#26a641] border-[#26a641]'
-      case 4:
-        return 'bg-[#39d353] dark:bg-[#39d353] border-[#39d353]'
-      default:
-        return 'bg-[#161b22] dark:bg-[#161b22] border-[#1b1f24] dark:border-[#1b1f24]'
+  // Swiss Dossier editorial cell density
+  const getCellClasses = (level: number) => {
+    if (level === 0) {
+      return isLight
+        ? 'bg-black/[0.04] border-black/[0.06]'
+        : 'bg-white/[0.04] border-white/[0.06]'
     }
+    if (level === 1) {
+      return isLight
+        ? 'bg-zinc-400 border-zinc-400'
+        : 'bg-zinc-700 border-zinc-700'
+    }
+    if (level === 2) {
+      return isLight
+        ? 'bg-zinc-700 border-zinc-700'
+        : 'bg-zinc-500 border-zinc-500'
+    }
+    if (level === 3) {
+      return isLight
+        ? 'bg-zinc-900 border-zinc-900'
+        : 'bg-zinc-300 border-zinc-300'
+    }
+    // Level 4: Signature vermilion accent!
+    return 'bg-[var(--vermilion)] border-[var(--vermilion)] shadow-[0_0_6px_rgba(232,66,31,0.4)]'
   }
 
   const handleCellHover = (e: React.MouseEvent, day: ContributionDay | null) => {
@@ -339,19 +333,16 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
     <section
       ref={sectionRef}
       id="contributions"
-      className="relative px-4 py-20 sm:px-6 md:py-28 lg:px-8 border-t border-black/[0.08] dark:border-white/[0.08]"
+      className="relative px-4 py-24 sm:px-8 md:py-32 lg:px-12 border-t border-hairline max-w-7xl mx-auto w-full select-none"
     >
-      <div className="mx-auto w-full max-w-5xl">
+      <div className="w-full">
         
-        {/* ── Section Eyebrow & Live Profile Link ── */}
-        <div className="gh-heading-row flex items-center justify-between pb-6">
-          <div className="flex items-center gap-2 font-mono text-xs sm:text-sm text-zinc-500 tracking-wider">
-            <span>06 — activity</span>
-            <span>•</span>
-            <span className="flex items-center gap-1.5 text-emerald-500 font-medium">
-              <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              Live GitHub Telemetry
-            </span>
+        {/* Eyebrow & Profile Link */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-hairline">
+          <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-[var(--text-muted)]">
+            <span>07 / TELEMETRY</span>
+            <span className="h-1 w-1 rounded-full bg-[var(--vermilion)]" />
+            <span>GIT COMMIT STREAM</span>
           </div>
 
           <a
@@ -359,37 +350,40 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
             target="_blank"
             rel="noreferrer"
             onClick={() => soundFx.playClick()}
-            className="group inline-flex items-center gap-2 font-mono text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
+            className="group inline-flex items-center gap-2 font-mono text-xs text-[var(--text-muted)] hover:text-[var(--text)] transition-colors cursor-pointer"
           >
             <FiGithub size={13} />
             <span>@{GITHUB_USERNAME}</span>
-            <FiExternalLink size={11} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <FiExternalLink size={11} className="transition-transform group-hover:translate-x-0.5" />
           </a>
         </div>
 
-        {/* ── Official GitHub Contribution Title (e.g. "366 contributions in 2026") ── */}
-        <div className="gh-heading-row pb-3">
-          <h3 className="text-base sm:text-lg font-normal text-zinc-900 dark:text-zinc-100">
-            {yearTotals[selectedYear]} contributions in {selectedYear}
+        {/* Total Header */}
+        <div className="pb-5">
+          <h3 className="font-display text-[clamp(1.05rem,1.7vw,1.35rem)] sm:text-base font-light text-[var(--text)] tracking-tight">
+            <span className="font-semibold">{yearTotals[selectedYear]}</span> contributions documented in {selectedYear}
           </h3>
         </div>
 
-        {/* ── Side-by-Side: Contribution Heatmap (Left) & Year Buttons (Right) ── */}
-        <div className="gh-calendar-container flex flex-col lg:flex-row gap-5 items-start">
+        {/* Heatmap & Year Switcher */}
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
           
-          {/* ── The Heatmap Box (Exact GitHub Styling) ── */}
-          <div className="w-full flex-1 rounded-xl border border-black/10 dark:border-white/10 bg-[#0d1117] p-4 sm:p-5 shadow-xl overflow-hidden">
+          {/* Calendar Heatmap Container */}
+          <div
+            ref={gridContainerRef}
+            className="w-full flex-1 border border-hairline rounded-xl hover:rounded-2xl transition-all duration-300 p-5 sm:p-6 overflow-hidden bg-[var(--text)]/[0.01]"
+          >
             <div className="overflow-x-auto scrollbar-none pb-2">
               <div className="inline-block min-w-full">
                 
                 {/* Month Headers */}
-                <div className="flex text-[10px] font-mono text-zinc-400 pl-7 pb-2 select-none h-5">
+                <div className="flex text-[10px] font-mono text-[var(--text-muted)] pl-7 pb-2 select-none h-5">
                   {monthLabels.map((m, idx) => (
                     <div
                       key={`${m.label}-${idx}`}
-                      className="flex-shrink-0"
+                      className="shrink-0"
                       style={{
-                        width: `${(weeks.length / monthLabels.length) * 14.5}px`,
+                        width: `${(weeks.length / monthLabels.length) * 14.8}px`,
                         maxWidth: '48px',
                       }}
                     >
@@ -398,17 +392,14 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
                   ))}
                 </div>
 
-                {/* Grid: Weekday Sidebar + 53 Week Columns */}
+                {/* Grid */}
                 <div className="flex gap-2">
-                  
-                  {/* Left Weekday Sidebar */}
-                  <div className="flex flex-col justify-between py-1 text-[9px] font-mono text-zinc-400 select-none w-6 text-right pr-2">
+                  <div className="flex flex-col justify-between py-1 text-[9px] font-mono text-[var(--text-muted)] select-none w-6 text-right pr-2">
                     <span>Mon</span>
                     <span>Wed</span>
                     <span>Fri</span>
                   </div>
 
-                  {/* 53 Columns of 7 Days */}
                   <div className="flex gap-[3.2px]">
                     {weeks.map((week, weekIdx) => (
                       <div key={weekIdx} className="flex flex-col gap-[3.2px]">
@@ -417,7 +408,7 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
                             return (
                               <div
                                 key={`pad-${weekIdx}-${dayIdx}`}
-                                className="h-[10.5px] w-[10.5px] sm:h-[11px] sm:w-[11px] rounded-[2px] opacity-0"
+                                className="h-[10.5px] w-[10.5px] sm:h-[11px] sm:w-[11px] rounded-[1px] opacity-0"
                               />
                             )
                           }
@@ -427,7 +418,7 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
                               key={day.date}
                               onMouseEnter={(e) => handleCellHover(e, day)}
                               onMouseLeave={() => setHoveredDay(null)}
-                              className={`h-[10.5px] w-[10.5px] sm:h-[11px] sm:w-[11px] rounded-[2px] border transition-transform duration-100 hover:scale-125 cursor-pointer ${getCellColor(
+                              className={`contrib-cell h-[10.5px] w-[10.5px] sm:h-[11px] sm:w-[11px] rounded-[1px] border transition-transform duration-150 hover:scale-135 cursor-pointer will-change-transform ${getCellClasses(
                                 day.level
                               )}`}
                             />
@@ -436,31 +427,22 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
                       </div>
                     ))}
                   </div>
-
                 </div>
 
               </div>
             </div>
 
-            {/* Bottom Card Footer: "Learn how we count contributions" & Legend */}
-            <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-white/[0.08] font-mono text-xs text-zinc-500">
-              <a
-                href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile"
-                target="_blank"
-                rel="noreferrer"
-                className="text-[11px] text-zinc-500 hover:text-blue-400 hover:underline transition-colors"
-              >
-                Learn how we count contributions
-              </a>
+            {/* Footer Legend */}
+            <div className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-hairline font-mono text-xs text-[var(--text-muted)]">
+              <span className="text-[11px]">TELEMETRY // VERIFIED COMMIT LOG</span>
 
-              {/* Less -> More Legend */}
-              <div className="flex items-center gap-1.5 text-[11px]">
+              <div className="flex items-center gap-2 text-[11px]">
                 <span>Less</span>
                 <div className="flex gap-1">
                   {[0, 1, 2, 3, 4].map((lvl) => (
                     <div
                       key={lvl}
-                      className={`h-2.5 w-2.5 rounded-[2px] border ${getCellColor(lvl)}`}
+                      className={`h-2.5 w-2.5 rounded-[1px] border ${getCellClasses(lvl)}`}
                     />
                   ))}
                 </div>
@@ -470,8 +452,8 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
 
           </div>
 
-          {/* ── Year Selector (Right Column Stack Matching GitHub) ── */}
-          <div className="w-full lg:w-28 flex flex-row lg:flex-col gap-1.5 flex-shrink-0">
+          {/* Clean Year Tabs */}
+          <div className="w-full lg:w-28 flex flex-row lg:flex-col gap-1.5 shrink-0">
             {years.map((yr) => {
               const isActive = selectedYear === yr
               return (
@@ -482,13 +464,14 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
                     soundFx.playClick()
                     setSelectedYear(yr)
                   }}
-                  className={`py-1.5 px-3 rounded-md text-xs font-mono text-left transition cursor-pointer ${
+                  className={`py-2 px-3 text-xs font-mono text-left transition cursor-pointer border flex items-center justify-between ${
                     isActive
-                      ? 'bg-[#0969da] text-white font-medium shadow-sm'
-                      : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
+                      ? 'border-[var(--text)] bg-[var(--text)]/[0.04] text-[var(--text)] font-semibold'
+                      : 'border-hairline text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--text)]'
                   }`}
                 >
-                  {yr}
+                  <span>{yr}</span>
+                  {isActive && <span className="h-1.5 w-1.5 rounded-full bg-[var(--vermilion)]" />}
                 </button>
               )
             })}
@@ -496,21 +479,21 @@ export default function GithubContributions({ theme = 'dark' }: GithubContributi
 
         </div>
 
-        {/* ── Floating Hover Tooltip ── */}
+        {/* Hover Tooltip */}
         {hoveredDay && tooltipPos && (
           <div
-            className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full rounded-md border border-white/15 bg-zinc-950 px-2.5 py-1 text-[11px] font-mono text-zinc-100 shadow-2xl"
+            className="pointer-events-none fixed z-50 -translate-x-1/2 -translate-y-full border border-hairline bg-[var(--bg)] px-3 py-1.5 text-[11px] font-mono text-[var(--text)] shadow-xl"
             style={{
               left: `${tooltipPos.x}px`,
               top: `${tooltipPos.y}px`,
             }}
           >
-            <p className="font-semibold text-white">
+            <p className="font-semibold text-[var(--text)]">
               {hoveredDay.count === 0
                 ? 'No contributions'
                 : `${hoveredDay.count} contribution${hoveredDay.count > 1 ? 's' : ''}`}
             </p>
-            <p className="text-[10px] text-zinc-400">
+            <p className="text-[10px] text-[var(--text-muted)]">
               {formatDate(hoveredDay.date)}
             </p>
           </div>

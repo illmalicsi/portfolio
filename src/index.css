@@ -1,30 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300..700&family=JetBrains+Mono:wght@400..600&family=Plus+Jakarta+Sans:wght@300..700&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── Minimalist Luxury / Linear-Vercel Design Tokens ────────────────────── */
+/* ── Swiss Dossier Design System ──────────────────────────────────────────
+   Light-first, editorial, grid-driven system inspired by printed design annuals.
+   Warm paper #F4F1EA, near-black ink #111110, muted grey #666560, single vermilion #E8421F.
+─────────────────────────────────────────────────────────────────────────── */
 :root {
-  --bg: #000000;
-  --bg-subtle: #08080a;
-  --bg-card: rgba(18, 18, 22, 0.65);
-  --bg-card-hover: rgba(26, 26, 32, 0.85);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.18);
-  --border-focus: rgba(255, 255, 255, 0.35);
+  --bg: #F4F1EA;
+  --bg-subtle: #ECE8E0;
+  --text: #111110;
+  --text-muted: #666560;
+  --text-subtle: #8A8881;
+  --hairline: rgba(17, 17, 16, 0.12);
+  --hairline-faint: rgba(17, 17, 16, 0.05);
+  --vermilion: #E8421F;
+  --paper-card: rgba(255, 255, 255, 0.75);
 
-  --text: #f4f4f5;
-  --text-dim: #a1a1aa;
-  --text-muted: #71717a;
-
-  --accent-white: #ffffff;
-  --accent-blue: #38bdf8;
-  --accent-emerald: #10b981;
-  --accent-violet: #818cf8;
-
-  --nav-bg: rgba(8, 8, 10, 0.72);
-
-  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text);
   background-color: var(--bg);
   font-synthesis: none;
@@ -33,39 +27,124 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-html.theme-light {
-  --bg: #fafafa;
-  --bg-subtle: #f4f4f5;
-  --bg-card: rgba(255, 255, 255, 0.9);
-  --bg-card-hover: #ffffff;
-  --border: rgba(0, 0, 0, 0.08);
-  --border-hover: rgba(0, 0, 0, 0.18);
-  --border-focus: rgba(0, 0, 0, 0.35);
+html.dark {
+  --bg: #121110;
+  --bg-subtle: #191816;
+  --text: #F4F1EA;
+  --text-muted: #9E9B93;
+  --text-subtle: #75726B;
+  --hairline: rgba(244, 241, 234, 0.12);
+  --hairline-faint: rgba(244, 241, 234, 0.05);
+  --vermilion: #E8421F;
+  --paper-card: rgba(28, 27, 24, 0.75);
+}
 
-  --text: #09090b;
-  --text-dim: #52525b;
-  --text-muted: #71717a;
+/* ── Typography Classes ─────────────────────────────────────────────────── */
+.font-display {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
 
-  --accent-white: #09090b;
-  --accent-blue: #0284c7;
-  --accent-emerald: #059669;
-  --accent-violet: #6366f1;
+.font-serif-italic {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+}
 
-  --nav-bg: rgba(255, 255, 255, 0.85);
+.font-body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Restrained type scale */
+.text-swiss-hero {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  font-weight: 300;
+  text-wrap: balance;
+}
+
+.text-swiss-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+.text-swiss-project {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(1.25rem, 1.8vw, 1.75rem);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+}
+
+.text-swiss-body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(1rem, 1.1vw, 1.0625rem);
+  line-height: 1.65;
+  max-width: 65ch;
+  color: var(--text);
+}
+
+.text-swiss-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+
+/* ── Vermilion Accent Details ───────────────────────────────────────────── */
+.text-vermilion {
+  color: var(--vermilion);
+}
+
+.bg-vermilion {
+  background-color: var(--vermilion);
+}
+
+.border-vermilion {
+  border-color: var(--vermilion);
+}
+
+/* ── Hairline Dividers ──────────────────────────────────────────────────── */
+.border-hairline {
+  border-color: var(--hairline);
+}
+
+.border-b-hairline {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.border-t-hairline {
+  border-top: 1px solid var(--hairline);
+}
+
+.border-l-hairline {
+  border-left: 1px solid var(--hairline);
+}
+
+.border-r-hairline {
+  border-right: 1px solid var(--hairline);
 }
 
 /* ── Selection ─────────────────────────────────────────────────────────── */
 ::selection {
-  background-color: #ffffff;
-  color: #000000;
-}
-
-html.theme-light ::selection {
-  background-color: #09090b;
+  background-color: var(--vermilion);
   color: #ffffff;
 }
 
-/* ── Reset & Core ──────────────────────────────────────────────────────── */
+/* ── Focus Visibility ──────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--vermilion);
+  outline-offset: 2px;
+}
+
+/* ── Core Reset ────────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
 }
@@ -86,14 +165,9 @@ html.lenis.lenis-smooth {
   overflow: hidden;
 }
 
-.lenis.lenis-scrolling iframe {
-  pointer-events: none;
-}
-
 html:not(.lenis) {
   scroll-behavior: smooth;
 }
-
 
 body {
   margin: 0;
@@ -102,19 +176,13 @@ body {
   background-color: var(--bg);
   color: var(--text);
   overflow-x: hidden;
-}
-
-/* Clear image rendering */
-img {
-  image-rendering: auto;
-  max-width: 100%;
-  height: auto;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 /* ── Minimalist Scrollbar ──────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -122,157 +190,51 @@ img {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--hairline);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--text-muted);
 }
 
-html.theme-light ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
-}
-
-html.theme-light ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-/* ── Subtle Ambient Lighting ───────────────────────────────────────────── */
-.ambient-glow {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 1200px;
-  height: 480px;
-  background: radial-gradient(50% 50% at 50% 0%, rgba(120, 119, 198, 0.12) 0%, rgba(0, 0, 0, 0) 100%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-html.theme-light .ambient-glow {
-  background: radial-gradient(50% 50% at 50% 0%, rgba(99, 102, 241, 0.08) 0%, rgba(250, 250, 250, 0) 100%);
-}
-
-.subtle-grid {
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, #000 60%, transparent 100%);
-}
-
-html.theme-light .subtle-grid {
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-}
-
-/* ── Minimalist Luxury Buttons ─────────────────────────────────────────── */
-.btn-primary {
+/* ── Understated Editorial Links & Buttons ─────────────────────────────── */
+.editorial-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background-color: var(--accent-white);
-  color: var(--bg);
-  padding: 0.65rem 1.4rem;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  text-decoration: none;
-  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid transparent;
-  cursor: pointer;
-  box-shadow: 0 0 20px -3px rgba(255, 255, 255, 0.2);
-}
-
-.btn-primary:hover {
-  opacity: 0.92;
-  transform: translateY(-1px);
-  box-shadow: 0 0 25px -2px rgba(255, 255, 255, 0.35);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-html.theme-light .btn-primary {
-  background-color: #09090b;
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-}
-
-html.theme-light .btn-primary:hover {
-  background-color: #27272a;
-  color: #ffffff;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
-}
-
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  border: 1px solid var(--border);
-  background-color: rgba(255, 255, 255, 0.03);
-  color: var(--text);
-  padding: 0.65rem 1.4rem;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  text-decoration: none;
-  backdrop-filter: blur(12px);
-  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: pointer;
-}
-
-.btn-secondary:hover {
-  border-color: var(--border-hover);
-  background-color: rgba(255, 255, 255, 0.06);
-  color: var(--accent-white);
-  transform: translateY(-1px);
-}
-
-.btn-secondary:active {
-  transform: translateY(0);
-}
-
-html.theme-light .btn-secondary {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background-color: rgba(0, 0, 0, 0.03);
-  color: #09090b;
-}
-
-html.theme-light .btn-secondary:hover {
-  border-color: rgba(0, 0, 0, 0.2);
-  background-color: rgba(0, 0, 0, 0.06);
-  color: #000000;
-}
-
-/* ── Sleek Hairline Cards ──────────────────────────────────────────────── */
-.card-sleek {
-  border: 1px solid var(--border);
-  background-color: var(--bg-card);
-  backdrop-filter: blur(16px);
-  border-radius: 1.25rem;
-  transition: border-color 200ms ease, background-color 200ms ease, transform 200ms ease;
-}
-
-.card-sleek:hover {
-  border-color: var(--border-hover);
-  background-color: var(--bg-card-hover);
-}
-
-/* ── Typography Utilities ──────────────────────────────────────────────── */
-.font-mono {
+  gap: 0.5rem;
   font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 180ms ease;
 }
 
-/* ── Marquee Animation ─────────────────────────────────────────────────── */
-@keyframes marquee {
+.editorial-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 1px;
+  background-color: var(--vermilion);
+  transition: width 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-link:hover {
+  color: var(--vermilion);
+}
+
+.editorial-link:hover::after {
+  width: 100%;
+}
+
+/* ── Slow Low-Contrast Marquee ─────────────────────────────────────────── */
+@keyframes swiss-marquee {
   0% {
     transform: translateX(0%);
   }
@@ -281,34 +243,27 @@ html.theme-light .btn-secondary:hover {
   }
 }
 
-.animate-marquee {
+.animate-swiss-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 32s linear infinite;
+  animation: swiss-marquee 45s linear infinite;
 }
 
-.animate-marquee:hover {
+.animate-swiss-marquee:hover {
   animation-play-state: paused;
 }
 
-/* ── Infinite Loop Carousel for Selected Work (Framer-style) ────────── */
-@keyframes loop-carousel {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
+/* ── View Transitions API circular reveal support ──────────────────────── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
-.animate-loop-carousel {
-  display: flex;
-  width: max-content;
-  animation: loop-carousel 38s linear infinite;
-  will-change: transform;
+::view-transition-old(root) {
+  z-index: 1;
 }
 
-.animate-loop-carousel[data-paused="true"] {
-  animation-play-state: paused;
+::view-transition-new(root) {
+  z-index: 9999;
 }
-
