@@ -34,6 +34,9 @@ const themeKey = 'portfolio-theme'
 
 function getInitialTheme(): 'dark' | 'light' {
   if (typeof window === 'undefined') return 'light'
+  const params = new URLSearchParams(window.location.search)
+  const queryTheme = params.get('theme')
+  if (queryTheme === 'dark' || queryTheme === 'light') return queryTheme
   const storedTheme = window.localStorage.getItem(themeKey)
   if (storedTheme === 'light' || storedTheme === 'dark') return storedTheme
   return 'light' // Swiss Dossier light-first default
@@ -46,6 +49,8 @@ export default function App() {
   const [isSoundOn, setIsSoundOn] = useState(() => soundFx.isEnabled())
   const [isPreloaderFinished, setIsPreloaderFinished] = useState(() => {
     if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('skip_preloader') === '1') return true
       return window.sessionStorage.getItem('ilm_portfolio_preloader_seen') === 'true'
     }
     return false
@@ -313,7 +318,7 @@ export default function App() {
         <Footer />
       </div>
 
-      {/* ── 9. Idle Easter Egg Cat (Appears after 30s idle time, leaves on move) ── */}
+      {/* ── 9. Ambient Companion Cat (Polite, well-behaved bottom-screen character) ── */}
       <BottomScreenCat theme={theme} />
 
       {/* ── 10. Full Page Editorial Blog Overlay ── */}

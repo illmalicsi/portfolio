@@ -1,0 +1,320 @@
+/* ── CatSvg.module.css ──────────────────────────────────────────────────
+   Swiss Dossier Articulated Cat Illustration Styles
+   All colors bound to site design tokens:
+   --bg: paper fill (#F4F1EA light / #121110 dark)
+   --text: ink stroke (#111110 light / #F4F1EA dark)
+   --vermilion: accent collar & bell (#E8421F)
+   --hairline: ground datum line
+   ───────────────────────────────────────────────────────────────────────── */
+
+.svgCat {
+  width: 64px;
+  height: 48px;
+  overflow: visible;
+  display: block;
+}
+
+/* ── Base Token-Driven Vector Styles ── */
+.inkStroke {
+  stroke: var(--text);
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.paperFill {
+  fill: var(--bg);
+}
+
+.paperFilledStroke {
+  fill: var(--bg);
+  stroke: var(--text);
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.vermilionCollar {
+  stroke: var(--vermilion);
+  stroke-width: 2.2px;
+  stroke-linecap: round;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.vermilionBell {
+  fill: var(--vermilion);
+  stroke: var(--text);
+  stroke-width: 0.8px;
+  vector-effect: non-scaling-stroke;
+}
+
+.groundLine {
+  stroke: var(--hairline);
+  stroke-width: 1px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.groundShadow {
+  fill: var(--text);
+  opacity: 0.08;
+  transform-origin: 32px 44px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  vector-effect: non-scaling-stroke;
+}
+
+.groundShadowJumping {
+  transform: scaleX(0.45) scaleY(0.3);
+  opacity: 0.02;
+}
+
+/* ── Articulated Independent Parts ── */
+
+/* Head Group */
+.headGroup {
+  transform-origin: 40px 22px;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.headGroupSleeping {
+  transform-origin: 33px 22px;
+}
+
+.headGroupLoafing {
+  transform-origin: 34px 22px;
+}
+
+.headGroupWalking {
+  transform-origin: 44px 21px;
+}
+
+/* Ear Groups */
+.earLeft {
+  transform-origin: 34px 10px;
+}
+
+.earRight {
+  transform-origin: 48px 10px;
+}
+
+/* Occasional single ear twitch */
+.earTwitch {
+  animation: earTwitchAnim 6.2s ease-in-out infinite;
+}
+
+@keyframes earTwitchAnim {
+  0%, 92%, 100% {
+    transform: rotate(0deg);
+  }
+  94% {
+    transform: rotate(-11deg);
+  }
+  96% {
+    transform: rotate(4deg);
+  }
+  98% {
+    transform: rotate(-5deg);
+  }
+}
+
+/* Tail Groups */
+.tailGroup {
+  transform-origin: 16px 36px;
+}
+
+/* Gentle tail flick every few seconds */
+.tailFlick {
+  animation: tailFlickAnim 4.2s ease-in-out infinite;
+}
+
+@keyframes tailFlickAnim {
+  0%, 82%, 100% {
+    transform: rotate(0deg);
+  }
+  86% {
+    transform: rotate(8deg);
+  }
+  91% {
+    transform: rotate(-5deg);
+  }
+  95% {
+    transform: rotate(3deg);
+  }
+}
+
+.tailWalking {
+  animation: tailWalkAnim 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes tailWalkAnim {
+  0% { transform: rotate(-7deg); }
+  100% { transform: rotate(9deg); }
+}
+
+.tailSleeping {
+  transform: rotate(2deg);
+}
+
+/* Body Groups */
+.bodyGroup {
+  transform-origin: 32px 42px;
+}
+
+/* Subtle breathing scale while loafing */
+.bodyLoafing {
+  animation: loafBreatheAnim 2.8s ease-in-out infinite;
+}
+
+@keyframes loafBreatheAnim {
+  0%, 100% {
+    transform: translateY(0px) scale(1, 1);
+  }
+  50% {
+    transform: translateY(-0.7px) scale(1.015, 1.025);
+  }
+}
+
+/* Deep rhythmic breathing while sleeping */
+.bodySleeping {
+  animation: sleepBreatheAnim 3.2s ease-in-out infinite;
+}
+
+@keyframes sleepBreatheAnim {
+  0%, 100% {
+    transform: translateY(0px) scale(1, 1);
+  }
+  50% {
+    transform: translateY(-1.1px) scale(1.02, 1.03);
+  }
+}
+
+/* Walking body bob */
+.bodyWalking {
+  animation: walkBobAnim 0.25s ease-in-out infinite alternate;
+}
+
+@keyframes walkBobAnim {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-1px); }
+}
+
+/* Walking Leg Cycles */
+.legWalkingRearA {
+  transform-origin: 21px 35px;
+  animation: legCycleA 0.5s ease-in-out infinite alternate;
+}
+
+.legWalkingFrontA {
+  transform-origin: 40px 35px;
+  animation: legCycleB 0.5s ease-in-out infinite alternate;
+}
+
+.legWalkingRearB {
+  transform-origin: 19px 35px;
+  animation: legCycleB 0.5s ease-in-out infinite alternate;
+}
+
+.legWalkingFrontB {
+  transform-origin: 38px 35px;
+  animation: legCycleA 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes legCycleA {
+  0% { transform: rotate(15deg); }
+  100% { transform: rotate(-13deg); }
+}
+
+@keyframes legCycleB {
+  0% { transform: rotate(-13deg); }
+  100% { transform: rotate(15deg); }
+}
+
+/* Grooming Paw Motion */
+.groomPaw {
+  transform-origin: 35px 36px;
+  animation: groomPawAnim 0.75s ease-in-out infinite alternate;
+}
+
+@keyframes groomPawAnim {
+  0% { transform: rotate(0deg) translate(0px, 0px); }
+  50% { transform: rotate(-15deg) translate(-1px, -2.5px); }
+  100% { transform: rotate(-5deg) translate(0px, -1.5px); }
+}
+
+/* Blinking Eyes (Slow blink every 4-7 seconds) */
+.catEyesBlinking {
+  animation: catSlowBlink 5.5s infinite;
+  transform-origin: 43px 18px;
+}
+
+.catEyesBlinkingLoaf {
+  animation: catSlowBlink 5.5s infinite;
+  transform-origin: 34px 18px;
+}
+
+.catEyesBlinkingWalk {
+  animation: catSlowBlink 5.5s infinite;
+  transform-origin: 47px 17px;
+}
+
+@keyframes catSlowBlink {
+  0%, 94%, 98%, 100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  96% {
+    transform: scaleY(0.08);
+    opacity: 0.7;
+  }
+}
+
+/* Perked Up Alert Posture */
+.perkedUp .headGroup {
+  transform: translateY(-2px) rotate(4deg);
+}
+
+.perkedUp .tailGroup {
+  transform: rotate(-12deg);
+}
+
+/* ── Reduced Motion Overrides ── */
+.reducedMotion .catEyesBlinking,
+.reducedMotion .catEyesBlinkingLoaf,
+.reducedMotion .catEyesBlinkingWalk,
+.reducedMotion .earTwitch,
+.reducedMotion .tailFlick,
+.reducedMotion .tailWalking,
+.reducedMotion .bodyLoafing,
+.reducedMotion .bodySleeping,
+.reducedMotion .bodyWalking,
+.reducedMotion .legWalkingRearA,
+.reducedMotion .legWalkingFrontA,
+.reducedMotion .legWalkingRearB,
+.reducedMotion .legWalkingFrontB,
+.reducedMotion .groomPaw {
+  animation: none !important;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catEyesBlinking,
+  .catEyesBlinkingLoaf,
+  .catEyesBlinkingWalk,
+  .earTwitch,
+  .tailFlick,
+  .tailWalking,
+  .bodyLoafing,
+  .bodySleeping,
+  .bodyWalking,
+  .legWalkingRearA,
+  .legWalkingFrontA,
+  .legWalkingRearB,
+  .legWalkingFrontB,
+  .groomPaw {
+    animation: none !important;
+    transform: none !important;
+  }
+}

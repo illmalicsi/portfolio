@@ -1,0 +1,232 @@
+/* ── BottomScreenCat.module.css ──────────────────────────────────────────
+   Swiss Dossier Ambient Companion Cat Container Styles
+   Tokens: --bg, --text, --vermilion, --hairline, --text-muted
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ── Container & Transformed Wrapper ── */
+.container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  pointer-events: none;
+  overflow: visible;
+  user-select: none;
+  z-index: 30; /* Above page background & content, below command palette (z-50) & modals (z-100) */
+  contain: layout style;
+}
+
+/* Hide on narrow mobile screens (<640px) */
+@media (max-width: 639px) {
+  .container {
+    display: none;
+  }
+}
+
+/* Transformed wrapper driven strictly by translate3d via RAF ref updates */
+.catWrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 64px;
+  height: 48px;
+  pointer-events: auto;
+  cursor: pointer;
+  will-change: transform;
+  transform-origin: 32px 44px;
+}
+
+/* ── Ground Datum Line & Narrow Shadow (Anchored to floor) ── */
+.groundSvg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 64px;
+  height: 48px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.groundLine {
+  stroke: var(--hairline);
+  stroke-width: 1px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.groundShadow {
+  fill: var(--text);
+  opacity: 0.08;
+  transform-origin: 32px 44px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  vector-effect: non-scaling-stroke;
+}
+
+/* Faint narrow shadow shrinks and fades while cat is in the air */
+.groundShadowJumping {
+  transform: scaleX(0.45) scaleY(0.3);
+  opacity: 0.02;
+}
+
+/* Inner body elevator & flipper */
+.catBodyFlip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: 32px 44px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* ── Editorial Label ("meow" with vermilion dot) ── */
+.editorialLabel {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background-color: var(--bg);
+  border: 1px solid var(--hairline);
+  border-radius: 0px; /* Crisp square corners */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  animation: editorialLabelAnim 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 35;
+  line-height: 1;
+}
+
+/* Small square notch pointing down towards the cat */
+.editorialLabel::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 3px;
+  background-color: var(--bg);
+  border-left: 1px solid var(--hairline);
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.editorialDot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--vermilion);
+  flex-shrink: 0;
+}
+
+.editorialText {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem; /* 12px / 0.75rem */
+  line-height: 1;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  text-transform: lowercase;
+}
+
+/* Rises about 8px and fades in using primary easing curve, stays ~1.5s, fades out */
+@keyframes editorialLabelAnim {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  14% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  85% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px);
+  }
+}
+
+/* ── Floating Sleep 'Z's (Minimalist JetBrains Mono) ── */
+.sleepZContainer {
+  position: absolute;
+  top: -12px;
+  right: 6px;
+  pointer-events: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.sleepZ1, .sleepZ2, .sleepZ3 {
+  position: absolute;
+  animation: floatZAnim 2.8s ease-out infinite;
+}
+
+.sleepZ1 {
+  font-size: 8px;
+  animation-delay: 0s;
+}
+
+.sleepZ2 {
+  font-size: 10px;
+  animation-delay: 0.9s;
+}
+
+.sleepZ3 {
+  font-size: 12px;
+  animation-delay: 1.8s;
+}
+
+@keyframes floatZAnim {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.7);
+  }
+  20% {
+    opacity: 0.8;
+    transform: translate(2px, -6px) scale(0.85);
+  }
+  60% {
+    opacity: 0.7;
+    transform: translate(5px, -13px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(8px, -20px) scale(1.1);
+  }
+}
+
+/* ── Page Visibility Pausing ── */
+.paused, .paused * {
+  animation-play-state: paused !important;
+}
+
+/* ── Reduced Motion Mode ── */
+.reducedMotionContainer .catWrapper {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editorialLabel {
+    animation: none !important;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .sleepZ1, .sleepZ2, .sleepZ3 {
+    animation: none !important;
+    opacity: 0.7;
+  }
+}

@@ -18,9 +18,10 @@ export default function Preloader({ onComplete, theme = 'light' }: PreloaderProp
   useEffect(() => {
     if (typeof window === 'undefined') return
 
-    // If preloader was already seen in this session or user prefers reduced motion, skip
+    // If preloader was already seen in this session, skipped, or user prefers reduced motion, skip
+    const params = new URLSearchParams(window.location.search)
     const hasSeen = window.sessionStorage.getItem(STORAGE_KEY)
-    if (hasSeen === 'true' || prefersReducedMotion()) {
+    if (hasSeen === 'true' || prefersReducedMotion() || params.get('skip_preloader') === '1') {
       onComplete()
       setIsDone(true)
       return
